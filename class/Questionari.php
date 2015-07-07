@@ -3,12 +3,14 @@ class Questionari {
 	private $Estimuls;
 	private $Id;
 	private $EstimulsActiu;
-	function __construct ($id,$Estimuls){
+	private $nom;
+	function __construct ($id,$nom,$Estimuls){
 		$this->Id = $id;
 		$this->Estimuls=$Estimuls;
 		$this->EstimulActiu=0;
+		$this->nom = $nom;
 	}
-	function getEstimul(){
+	function getEstimuls(){
 		return $this->Estimuls;
 	}
 	function generateHTML(){
@@ -20,6 +22,9 @@ class Questionari {
 		}
 		if ($this->EstimulActiu<count($this->Estimuls)-1){
 			$html.="  <li><a href='#' onClick='seguent()'>Seguent</a></li>";
+		}
+		else{
+			$html.="  <li><a href='#' onClick='guardarEnBaseDeDades()'>Finalitzar</a></li>";	
 		}  
   		$html.='</ul></nav>';		
 		return  $html;
@@ -38,6 +43,12 @@ class Questionari {
 		for($i=0;$i<count($this->Estimuls[$this->EstimulActiu]->Items);$i++){
 			$this->Estimuls[$this->EstimulActiu]->Items[$i]->setRespostes($respostes[$i]);
 		}
+	}
+	function getNom(){
+		return $this->nom;
+	}
+	function getId(){
+		return $this->Id;
 	}
 	
 }

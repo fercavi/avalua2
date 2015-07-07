@@ -59,12 +59,20 @@
   <body>
   <div class='container'>
 <?php
-require_once 'conf.php';
-//require_once 'class/fake_servidor.php';
-
-/*$Questionari = getQuestionari(1);
-if(isset($_GET["action"])){
+require_once('conf.php');
+//TODO_:seguretat
+session_start();
+if(!isset($_GET["action"])){
+	$id=$_GET["q"];	
+	$user =$_SESSION["USUARI"];
+	$Questionari=$user->getQuestionari($id);
+	$_SESSION["QUESTIONARI"]=$Questionari;		
+}
+else
+//if(isset($_GET["action"])){
+{
 	$action = $_GET["action"];
+	$Questionari = $_SESSION["QUESTIONARI"];
 	if($action=="seguent"){
 		$Questionari->seguent();
 	}
@@ -76,18 +84,12 @@ if(isset($_GET["action"])){
 		$Questionari = getQuestionari();
 	}
 }
-
 echo $Questionari->generateHTML();
-*/
-	$user = new Usuari("Pepet");
-	$questionaris = $user->getQuestionaris();		
-	for($i=0;$i<count($questionaris);$i++){
-		$q = $questionaris[$i];
-		echo "<a href='veure_questionari.php?q=".$q->getId()."'>".$q->getNom()."</a><br/>";
-	}
+	
 
 ?>
-<a href='<?php echo basename($_SERVER["PHP_SELF"]); ?>?action=tancarSessio'>Tacar Sessio</a>
+
+<a href='index.php?action=tancarSessio'>Tacar Sessio</a>
 </div>
 <script src="js/jquery.min.js"></script>    
  <script src="js/bootstrap.min.js"></script>

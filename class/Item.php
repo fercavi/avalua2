@@ -21,9 +21,11 @@
   	}
   	abstract function generateHTML();
     protected function RespostaContestada($resposta)  {
-      $result = false;      
-      if (in_array($resposta,$this->Respostes))
-        $result = true;
+      $result = false;     
+      if (isset($this->Respostes)) {
+        if (in_array($resposta,$this->Respostes))
+          $result = true;
+      }
       return $result;     
     }
     public function setRespostes($respostes){

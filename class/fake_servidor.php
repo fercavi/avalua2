@@ -1,5 +1,5 @@
 <?php
-function getQuestionari(){
+function getQuestionari($id){
 	session_start();	
 	if (isset($_SESSION)){
 		if (!isset($_SESSION["QUESTIONARI"])){
