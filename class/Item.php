@@ -4,11 +4,15 @@
   	protected $Preguntes;
   	protected $Respostes;
   	protected $Id;
-  	function __construct($id,$enunciat,$preguntes,$respostes){
+    protected $actiu;
+    protected $visible;
+  	function __construct($id,$enunciat,$preguntes,$respostes,$actiu=true,$visible=true){
   		$this->Enunciat=$enunciat;
   		$this->Preguntes=$preguntes;
   		$this->Respostes = $respostes;
   		$this->Id=$id;
+      $this->actiu = $actiu;
+      $this->visible=$visible;
   	}
   	function getRespostes(){
   		return $this->Respostes;

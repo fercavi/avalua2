@@ -32,8 +32,10 @@ class Usuari{
 			$items[] = new ItemRadioButton(4,"<b>Pregunta4</b>",array("Opcio1","Opcio2"),array());
 			$items[] = new ItemRadioButton(5,"<b>Pregunta5</b>",array("Opcio3","Opcio4"),array());
 			$Estimuls[] = new Estimul(2,$items);	
-			$Questionari = new Questionari(0,"Questionari 1",$Estimuls);		
-			$this->questionaris= array($Questionari);
+			$Questionari = new Questionari(0,"Questionari 1",$Estimuls);					
+			$this->questionaris[]= $Questionari;
+			$Questionari = new Questionari(1,"Questionari 2",$Estimuls);		
+			$this->questionaris[]= $Questionari;
 	}
 
 	public function getQuestionaris(){
