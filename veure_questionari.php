@@ -49,7 +49,7 @@
     			type:'GET',
     			data:'accio=guardarRespostesBaseDeDades',
     			success:function(result){    				
-    				window.location='index.php'
+    				window.location='menu.php'
     			}
     		}
             $.ajax(peticio);
@@ -62,11 +62,13 @@
 require_once('conf.php');
 //TODO_:seguretat
 session_start();
-if(!isset($_GET["action"])){
+if (!isset($_SESSION["USUARI"])) die();
+if(!isset($_GET["action"])){    
 	$id=$_GET["q"];	
 	$user =$_SESSION["USUARI"];
 	$Questionari=$user->getQuestionari($id);
 	$_SESSION["QUESTIONARI"]=$Questionari;		
+    $Questionari->Inici();
 }
 else
 //if(isset($_GET["action"])){
@@ -81,7 +83,7 @@ else
 	}
 	if($action=="tancarSessio"){
 		session_destroy( );
-		$Questionari = getQuestionari();
+		$Questionari = getQuestionari();        
 	}
 }
 echo $Questionari->generateHTML();

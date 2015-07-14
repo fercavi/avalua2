@@ -50,6 +50,9 @@ class Questionari {
 	function getId(){
 		return $this->Id;
 	}
+	public function Inici(){
+		$this->EstimulActiu=0;
+	}
 	
 }
 

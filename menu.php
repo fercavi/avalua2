@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ca">
   <head>
@@ -10,8 +11,9 @@
   <div class='container'>
 <?php
 	require 'conf.php';
-	session_start();
-	$user=$_SESSION["USUARI"];	
+	session_start();	
+	if (!isset($_SESSION["USUARI"])) die();
+	$user=$_SESSION["USUARI"];		
 	$questionaris = $user->getQuestionaris();		
 	for($i=0;$i<count($questionaris);$i++){
 		$q = $questionaris[$i];
@@ -20,7 +22,7 @@
 
 ?>
 
-<a href='<?php echo basename($_SERVER["PHP_SELF"]); ?>?action=tancarSessio'>Tacar Sessio</a>
+<a href='index.php?action=tancarSessio'>Tacar Sessio</a>
 </div>
 <script src="js/jquery.min.js"></script>    
  <script src="js/bootstrap.min.js"></script>
