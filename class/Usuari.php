@@ -11,15 +11,18 @@ class Usuari{
 
 	public function  __construct($username){
 		//loaderType: variable global en conf.php
-		session_start(); //per a poder guardar l'usuari
-		global $loaderType;
+		session_start(); //per a poder guardar l'usuari		
 		$this->username=$username;
-		//$loader = LoaderDBAFactory::getDBALoader($loaderType);
-		//$loader->loadDataFromDBA();
-		$this->loadDataFromDBA();
+
+		global $loaderType;
+		$loader = LoaderDBAFactory::getDBALoader($loaderType);
+		$dades = $loader->loadDataFromDBA($username);
+		$this->questionaris=$dades["QUESTIONARIS"];
+		//$this->loadDataFromDBA();
 		$_SESSION["USUARI"]= $this;
 	}
 	private function loadDataFromDBA(){
+		//Dummy for test purposes
 			if ($this->username=='Pepet') {
 				$Estimuls = array();
 				$items = array();
