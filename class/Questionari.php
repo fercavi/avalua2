@@ -36,14 +36,14 @@ class Questionari {
 	}
 	function anterior(){
 		if($this->EstimulActiu!=0){
-			$this->EstimulActiu--;
+		$this->EstimulActiu--;
 		}
 	}
 	function setRespostesEstimulActiu($respostes){
 		for($i=0;$i<count($this->Estimuls[$this->EstimulActiu]->Items);$i++){
 			$this->Estimuls[$this->EstimulActiu]->Items[$i]->setRespostes($respostes[$i]);
-		}
-	}
+    }
+  }
 	function getNom(){
 		return $this->nom;
 	}

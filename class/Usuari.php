@@ -16,7 +16,7 @@ class Usuari{
 
 		global $loaderType;
 		$loader = LoaderDBAFactory::getDBALoader($loaderType);
-		$dades = $loader->loadDataFromDBA($username);
+		$dades = $loader->loadDataFromDBA($username,'val');
 		$this->questionaris=$dades["QUESTIONARIS"];
 		//$this->loadDataFromDBA();
 		$_SESSION["USUARI"]= $this;
