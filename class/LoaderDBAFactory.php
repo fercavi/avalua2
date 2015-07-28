@@ -34,13 +34,41 @@ class LoaderDBAMysql{
     $Q = new Questionari($idquestionari,$nom,$Estimuls);
     return $Q;
 	}
+  private function getOpcions($idItem){
+    global $connexio; 
+     $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );  
+     $query = "select C.text from cadenes C,opcions O where C.idorige=O.id and O.iditem=$idItem and C.taulaorige='opcions' and C.camporige='valor' and C.idioma='".$this->idioma ."' order by ordre";     
+     $files=$PDOItems->query($query);
+		 $fila=$files->fetch(PDO::FETCH_BOTH);		
+     $result = array();
+     while($fila){
+      $result[] = utf8_encode($fila["text"]);
+      $fila=$files->fetch(PDO::FETCH_BOTH);		
+     }     
+     return $result;
+  }
+  private function getRespostes($iditem){
+    return array();
+  }
+  
   private function getItems($idEstimul){
     global $connexio;    
     $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );  
-    $queryEnunciat =  "select C.text as enunciat,P.lectura,P.escriptura from cadenes C, items_estimuls IE,permisos P ";
-    $queryEnunciat .= " where "
+    //TODO: falta enllaçar correctament els items amb els permisos i estímuls
+    $queryEnunciat =  "select IE.iditem,C.text as enunciat,P.lectura,P.escriptura from cadenes C, items_estimul IE,estimul_questionari EQ, permisos P ";
+    $queryEnunciat .= " where P.idusuari=".$this->uid." and P.camp='items' and P.idorige=IE.id and IE.idestimul_questionari=EQ.id AND ";
+    $queryEnunciat .= " EQ.idestimul=$idEstimul and C.idioma='".$this->idioma."' and C.taulaorige='Items' and C.camporige='enunciat' and C.idorige=IE.iditem";
+    
     $Items = array();
-    $Items[] = new ItemRadioButton(0,"<b>Pregunta0</b>",array("Opcio1","Opcio2"),array(0));
+    $files=$PDOItems->query($queryEnunciat);
+		$fila=$files->fetch(PDO::FETCH_BOTH);		
+    while($fila){
+      $opcions = $this->getOpcions($fila["iditem"]);      
+      $respostes = $this->getRespostes($fila["iditem"]);
+      $Items[] = new ItemRadioButton($fila["iditem"],utf8_encode($fila["enunciat"]),$opcions,$respostes);
+      $fila=$files->fetch(PDO::FETCH_BOTH);	
+    }
+    //$Items[] = new ItemRadioButton(0,"<b>Pregunta0</b>",array("Opcio1","Opcio2"),array(0));
     return $Items;
   }
   private function getEstimulsQuestionaris($idquestionari){
@@ -57,8 +85,9 @@ class LoaderDBAMysql{
     $fila=$files->fetch(PDO::FETCH_BOTH);
     $Estimuls = array();
     while ($fila){
-      $Items = $this->getItems();
-      $Estimuls[]=new Estimul($fila["id"],utf8_encode($fila["Titol"]),utf8_encode($fila["text"]),$Items);
+      $idestimul = $fila["id"];
+      $Items = $this->getItems($idestimul);
+      $Estimuls[]=new Estimul($idestimul,utf8_encode($fila["Titol"]),utf8_encode($fila["text"]),$Items);
       $fila=$files->fetch(PDO::FETCH_BOTH);
     }
     return $Estimuls;

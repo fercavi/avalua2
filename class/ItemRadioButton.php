@@ -20,7 +20,7 @@ class ItemRadioButton extends Item{
   				$pregunta.="<div class='radio'><label><input $actiu type='radio' name='pregunta' resposta='$i'>".$this->Preguntes[$i]."</input></label></div>";
   			}
   		}
-  		$pregunta .='</form>';
+  		$pregunta .='</form>';      
   		return $pregunta;
 
   	}  	
