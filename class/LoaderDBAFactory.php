@@ -65,7 +65,13 @@ class LoaderDBAMysql{
     while($fila){
       $opcions = $this->getOpcions($fila["iditem"]);      
       $respostes = $this->getRespostes($fila["iditem"]);
-      $Items[] = new ItemRadioButton($fila["iditem"],utf8_encode($fila["enunciat"]),$opcions,$respostes);
+      $lectura = false;
+      if ($fila["lectura"]=="1")
+        $lectura = true;
+      $escriptura = false;
+      if ($fila["escriptura"]=="1")
+        $escriptura = true;
+      $Items[] = new ItemRadioButton($fila["iditem"],utf8_encode($fila["enunciat"]),$opcions,$respostes,$escriptura,$lectura);
       $fila=$files->fetch(PDO::FETCH_BOTH);	
     }
     //$Items[] = new ItemRadioButton(0,"<b>Pregunta0</b>",array("Opcio1","Opcio2"),array(0));
