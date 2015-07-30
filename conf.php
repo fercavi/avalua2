@@ -5,6 +5,7 @@ function __autoload($class_name) {
 
 //Mysql
 $loaderType = LoaderDBAFactory::LoaderDBAMysqlType;
+$saverType = SaverDBAFactory::SaverDBAMysqlType;
 
 
 

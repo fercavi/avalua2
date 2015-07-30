@@ -11,6 +11,7 @@ class LoaderDBAMysql{
 	    $result = array();
 	    $Questionaris = $this->loadQuestionaris($userlogin);	
 	    $result["QUESTIONARIS"]=$Questionaris;
+      $result["UID"]= $this->uid;
 	    return $result;
 	}
 	function loadQuestionaris($userlogin){

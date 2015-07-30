@@ -17,13 +17,19 @@ function guardarRespostes($respostes){
 	$_SESSION["QUESTIONARI"] = $questionari;	
 }
 function guardarRespostesBaseDeDades(){
+  $user = $_SESSION["USUARI"];  
+  $uid = $user->getUid();
 	$questionari = $_SESSION["QUESTIONARI"];
 	$Estimuls = $questionari->getEstimuls();
 	for($i=0;$i<count($Estimuls);$i++){
 		$Estimul =$Estimuls[$i];
 		for($j=0;$j<count($Estimul->Items);$j++){
 			$Item=$Estimul->Items[$j];
-			error_log(var_export($Item->getRespostes(),true));
+			//error_log(var_export($Item->getRespostes(),true));
+      global $saverType;
+		  $saver = SaverDBAFactory::getDBASaver($saverType);
+      $saver->guardarRespostes($uid,$Item->getId(),$Item->getRespostes());
+      
 		}
 	}
 	//error_log(var_export($questionari,true));

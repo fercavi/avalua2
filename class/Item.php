@@ -23,6 +23,9 @@
   	function getEnunciat(){
   		return $this->Enunciat;
   	}
+    public function getId(){
+      return $this->Id;
+    }
   	abstract function generateHTML();
     protected function RespostaContestada($resposta)  {
       $result = false;     

@@ -8,6 +8,7 @@ class Usuari{
 	private $nom;
 	private $permisos;
 	private $questionaris;
+  private $uid;
 
 	public function  __construct($username){
 		//loaderType: variable global en conf.php
@@ -16,8 +17,9 @@ class Usuari{
 
 		global $loaderType;
 		$loader = LoaderDBAFactory::getDBALoader($loaderType);
-		$dades = $loader->loadDataFromDBA($username,'val');
+		$dades = $loader->loadDataFromDBA($username,'val');    
 		$this->questionaris=$dades["QUESTIONARIS"];
+    $this->uid = $dades["UID"];
 		//$this->loadDataFromDBA();
 		$_SESSION["USUARI"]= $this;
 	}
@@ -76,9 +78,12 @@ class Usuari{
 		}
 		return $q;
 	}
+  public function getUid(){
+    return $this->uid;
+  }
 	public function login($pass){
 		$result = false;		
-		if($this->username=='Pepet'||$this->username=='Vicent'){
+		if($this->username=='Pepet'||$this->username=='Vicent'){      
 			$result = true;
 		}
 		return $result;
