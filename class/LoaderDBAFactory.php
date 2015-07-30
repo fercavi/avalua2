@@ -51,27 +51,26 @@ class LoaderDBAMysql{
     return array();
   }
   
-  private function getItems($idEstimul){
+  private function getItems($idEstimulInstancia){
     global $connexio;    
     $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );  
     //TODO: falta enllaçar correctament els items amb els permisos i estímuls
-    $queryEnunciat =  "select IE.iditem,C.text as enunciat,P.lectura,P.escriptura from cadenes C, items_estimul IE,estimul_questionari EQ, permisos P ";
-    $queryEnunciat .= " where P.idusuari=".$this->uid." and P.camp='items' and P.idorige=IE.id and IE.idestimul_questionari=EQ.id AND ";
-    $queryEnunciat .= " EQ.idestimul=$idEstimul and C.idioma='".$this->idioma."' and C.taulaorige='Items' and C.camporige='enunciat' and C.idorige=IE.iditem";
-    
+    $queryEnunciat =  "select IE.iditem,IE.id,C.text as enunciat,P.lectura,P.escriptura from cadenes C, item_instancia IE,estimul_instancia EQ, permisos P ";
+    $queryEnunciat .= " where P.idusuari=".$this->uid." and P.camp='items' and P.idorige=IE.id and IE.idestimul_instancia=EQ.id AND ";
+    $queryEnunciat .= " EQ.id=$idEstimulInstancia and C.idioma='".$this->idioma."' and C.taulaorige='Items' and C.camporige='enunciat' and C.idorige=IE.iditem";    
     $Items = array();
     $files=$PDOItems->query($queryEnunciat);
 		$fila=$files->fetch(PDO::FETCH_BOTH);		
     while($fila){
       $opcions = $this->getOpcions($fila["iditem"]);      
-      $respostes = $this->getRespostes($fila["iditem"]);
+      $respostes = $this->getRespostes($fila["id"]);
       $lectura = false;
       if ($fila["lectura"]=="1")
         $lectura = true;
       $escriptura = false;
       if ($fila["escriptura"]=="1")
         $escriptura = true;
-      $Items[] = new ItemRadioButton($fila["iditem"],utf8_encode($fila["enunciat"]),$opcions,$respostes,$escriptura,$lectura);
+      $Items[] = new ItemRadioButton($fila["id"],utf8_encode($fila["enunciat"]),$opcions,$respostes,$escriptura,$lectura);
       $fila=$files->fetch(PDO::FETCH_BOTH);	
     }
     //$Items[] = new ItemRadioButton(0,"<b>Pregunta0</b>",array("Opcio1","Opcio2"),array(0));
@@ -83,16 +82,19 @@ class LoaderDBAMysql{
     $subqueryTitol = "select C1.text from cadenes C1   WHERE";
     $subqueryTitol .= " C1.idorige=E.id AND C1.taulaorige='estimuls' and C1.camporige='titol' AND EQ.idquestionari='$idquestionari'";
     $subqueryTitol .= " AND E.id=EQ.idestimul and C1.idioma='". $this->idioma ."'";
-    $queryEnunciat = "select (".$subqueryTitol.") as Titol,EQ.id as EQID,E.id,C.text from estimuls E,estimul_questionari EQ,cadenes C, permisos P WHERE ";
+    $queryEnunciat = "select (".$subqueryTitol.") as Titol,EQ.id as EIID,E.id,C.text from estimuls E,estimul_instancia EQ,cadenes C, permisos P WHERE ";
     $queryEnunciat .= " C.idorige=E.id and C.taulaorige='estimuls' and C.camporige='enunciat' AND EQ.idquestionari='$idquestionari' ";    
     $queryEnunciat .= " AND E.id=EQ.idestimul and C.idioma='".$this->idioma."'  ";    
-    $queryEnunciat .= " AND P.lectura=1 AND P.idorige=E.id AND P.idusuari='".$this->uid."' AND P.camp='estimuls'";
+    $queryEnunciat .= " AND P.lectura=1 AND P.idorige=EQ.id AND P.idusuari='".$this->uid."' AND P.camp='estimuls'";
+    
+    
     $files=$PDOEstimuls->query($queryEnunciat);
     $fila=$files->fetch(PDO::FETCH_BOTH);
     $Estimuls = array();
     while ($fila){
       $idestimul = $fila["id"];
-      $Items = $this->getItems($idestimul);
+      $idestimulinstancia = $fila["EIID"];
+      $Items = $this->getItems($idestimulinstancia);
       $Estimuls[]=new Estimul($idestimul,utf8_encode($fila["Titol"]),utf8_encode($fila["text"]),$Items);
       $fila=$files->fetch(PDO::FETCH_BOTH);
     }

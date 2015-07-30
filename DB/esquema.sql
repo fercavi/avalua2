@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 22-07-2015 a las 13:53:12
--- Versión del servidor: 5.6.19-0ubuntu0.14.04.1
--- Versión de PHP: 5.5.9-1ubuntu4.11
+-- Temps de generació: 30-07-2015 a les 09:45:07
+-- Versió del servidor: 5.6.19-0ubuntu0.14.04.1
+-- Versió de PHP: 5.5.9-1ubuntu4.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,29 +17,29 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `avalua3`
+-- Base de dades: `avalua3`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cadenes`
+-- Estructura de la taula `cadenes`
 --
 
 CREATE TABLE IF NOT EXISTS `cadenes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `idorige` int(32) NOT NULL,
-  `taulaorigen` varchar(32) NOT NULL,
+  `taulaorige` varchar(32) NOT NULL,
   `camporige` varchar(32) NOT NULL,
   `idioma` varchar(16) NOT NULL,
   `text` varchar(1024) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estimuls`
+-- Estructura de la taula `estimuls`
 --
 
 CREATE TABLE IF NOT EXISTS `estimuls` (
@@ -51,10 +51,10 @@ CREATE TABLE IF NOT EXISTS `estimuls` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estimul_questionari`
+-- Estructura de la taula `estimul_instancia`
 --
 
-CREATE TABLE IF NOT EXISTS `estimul_questionari` (
+CREATE TABLE IF NOT EXISTS `estimul_instancia` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `idestimul` int(11) NOT NULL,
   `idquestionari` int(11) NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `estimul_questionari` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `items`
+-- Estructura de la taula `items`
 --
 
 CREATE TABLE IF NOT EXISTS `items` (
@@ -76,12 +76,12 @@ CREATE TABLE IF NOT EXISTS `items` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `items_estimul`
+-- Estructura de la taula `item_instancia`
 --
 
-CREATE TABLE IF NOT EXISTS `items_estimul` (
+CREATE TABLE IF NOT EXISTS `item_instancia` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `idestimul` int(11) NOT NULL,
+  `idestimul_instancia` int(11) NOT NULL,
   `iditem` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `items_estimul` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `opcions`
+-- Estructura de la taula `opcions`
 --
 
 CREATE TABLE IF NOT EXISTS `opcions` (
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `opcions` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `permisos`
+-- Estructura de la taula `permisos`
 --
 
 CREATE TABLE IF NOT EXISTS `permisos` (
@@ -114,12 +114,12 @@ CREATE TABLE IF NOT EXISTS `permisos` (
   `escriptura` int(11) NOT NULL,
   `idorige` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `questionaris`
+-- Estructura de la taula `questionaris`
 --
 
 CREATE TABLE IF NOT EXISTS `questionaris` (
@@ -131,20 +131,21 @@ CREATE TABLE IF NOT EXISTS `questionaris` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `respostes`
+-- Estructura de la taula `respostes`
 --
 
 CREATE TABLE IF NOT EXISTS `respostes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `iditem` int(11) NOT NULL,
   `resposta` varchar(1024) NOT NULL,
+  `idusuari` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuaris`
+-- Estructura de la taula `usuaris`
 --
 
 CREATE TABLE IF NOT EXISTS `usuaris` (
