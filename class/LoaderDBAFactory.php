@@ -35,7 +35,7 @@ class LoaderDBAMysql{
     return $Q;
 	}
   private function getOpcions($idItem){
-    global $connexio; 
+     global $connexio; 
      $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );  
      $query = "select C.text from cadenes C,opcions O where C.idorige=O.id and O.iditem=$idItem and C.taulaorige='opcions' and C.camporige='valor' and C.idioma='".$this->idioma ."' order by ordre";     
      $files=$PDOItems->query($query);
@@ -48,7 +48,17 @@ class LoaderDBAMysql{
      return $result;
   }
   private function getRespostes($iditem){
-    return array();
+    global $connexio;
+    $PDORespostes = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );  
+    $queryRespostes = "Select resposta from respostes where iditem_instancia=$iditem and idusuari=".$this->uid;
+    $respostes = array();
+    $files=$PDORespostes->query($queryRespostes);
+		$fila=$files->fetch(PDO::FETCH_BOTH);
+    while($fila){
+      $respostes[]=$fila["resposta"];
+      $fila=$files->fetch(PDO::FETCH_BOTH);	
+    }
+    return $respostes;
   }
   
   private function getItems($idEstimulInstancia){
