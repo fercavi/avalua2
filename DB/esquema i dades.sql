@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Temps de generació: 30-07-2015 a les 09:46:22
--- Versió del servidor: 5.6.19-0ubuntu0.14.04.1
+-- Temps de generació: 03-08-2015 a les 10:14:52
+-- Versió del servidor: 5.5.44-0ubuntu0.14.04.1
 -- Versió de PHP: 5.5.9-1ubuntu4.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -36,6 +36,38 @@ CREATE TABLE IF NOT EXISTS `cadenes` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
+--
+-- Bolcant dades de la taula `cadenes`
+--
+
+INSERT INTO `cadenes` (`id`, `idorige`, `taulaorige`, `camporige`, `idioma`, `text`) VALUES
+(1, 0, 'questionaris', 'nom', 'val', 'Questionari 1'),
+(2, 1, 'questionaris', 'nom', 'val', 'Questionari 2'),
+(3, 0, 'Items', 'enunciat', 'val', 'Pregunta 0'),
+(4, 1, 'Items', 'enunciat', 'val', 'Pregunta 1'),
+(5, 2, 'Items', 'enunciat', 'val', 'Pregunta 2'),
+(6, 3, 'Items', 'enunciat', 'val', 'Pregunta 3'),
+(7, 4, 'Items', 'enunciat', 'val', 'Pregunta 4'),
+(8, 5, 'Items', 'enunciat', 'val', 'Pregunta 5'),
+(9, 1, 'opcions', 'valor', 'val', 'Opció 1'),
+(10, 2, 'opcions', 'valor', 'val', 'Opció 2'),
+(11, 3, 'opcions', 'valor', 'val', 'Opció 3'),
+(12, 4, 'opcions', 'valor', 'val', 'Opció 4'),
+(13, 5, 'opcions', 'valor', 'val', 'Opció 1'),
+(14, 6, 'opcions', 'valor', 'val', 'Opció 2'),
+(15, 7, 'opcions', 'valor', 'val', 'Opció 3'),
+(16, 8, 'opcions', 'valor', 'val', 'Opció 4'),
+(17, 9, 'opcions', 'valor', 'val', 'Opció 1'),
+(18, 10, 'opcions', 'valor', 'val', 'Opció 2'),
+(19, 11, 'opcions', 'valor', 'val', 'Opció 3'),
+(20, 12, 'opcions', 'valor', 'val', 'Opció 4'),
+(21, 0, 'estimuls', 'titol', 'val', 'Estímul 1'),
+(22, 0, 'estimuls', 'enunciat', 'val', 'enunciat de l''estímul 1'),
+(23, 1, 'estimuls', 'titol', 'val', 'Estímul 2'),
+(24, 1, 'estimuls', 'enunciat', 'val', 'enunciat de l''estímul 2'),
+(25, 2, 'estimuls', 'titol', 'val', 'Estímul 3'),
+(26, 2, 'estimuls', 'enunciat', 'val', 'enunciat de l''estímul 3');
+
 -- --------------------------------------------------------
 
 --
@@ -48,6 +80,15 @@ CREATE TABLE IF NOT EXISTS `estimuls` (
   PRIMARY KEY (`id`,`descripcio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Bolcant dades de la taula `estimuls`
+--
+
+INSERT INTO `estimuls` (`id`, `descripcio`) VALUES
+(0, 'Estímul 1'),
+(1, 'Estímul 2'),
+(2, 'Estímul 3');
+
 -- --------------------------------------------------------
 
 --
@@ -59,7 +100,19 @@ CREATE TABLE IF NOT EXISTS `estimul_instancia` (
   `idestimul` int(11) NOT NULL,
   `idquestionari` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Bolcant dades de la taula `estimul_instancia`
+--
+
+INSERT INTO `estimul_instancia` (`id`, `idestimul`, `idquestionari`) VALUES
+(1, 0, 0),
+(2, 1, 0),
+(3, 2, 0),
+(4, 0, 1),
+(5, 1, 1),
+(6, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -86,6 +139,18 @@ CREATE TABLE IF NOT EXISTS `item_instancia` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
+--
+-- Bolcant dades de la taula `item_instancia`
+--
+
+INSERT INTO `item_instancia` (`id`, `idestimul_instancia`, `iditem`) VALUES
+(0, 1, 0),
+(1, 1, 1),
+(2, 2, 2),
+(3, 2, 3),
+(4, 3, 4),
+(5, 3, 5);
+
 -- --------------------------------------------------------
 
 --
@@ -99,6 +164,24 @@ CREATE TABLE IF NOT EXISTS `opcions` (
   `ordre` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+
+--
+-- Bolcant dades de la taula `opcions`
+--
+
+INSERT INTO `opcions` (`id`, `iditem`, `descripcio`, `ordre`) VALUES
+(1, 0, 'Opció 1', 0),
+(2, 0, 'Opció 2', 1),
+(3, 1, 'Opció 3', 0),
+(4, 1, 'Opció 4', 1),
+(5, 2, 'Opció 1', 0),
+(6, 2, 'Opció 2', 1),
+(7, 3, 'Opció 3', 0),
+(8, 3, 'Opció 4', 1),
+(9, 4, 'Opció 1', 0),
+(10, 4, 'Opció 2', 1),
+(11, 5, 'Opció 3', 0),
+(12, 5, 'Opció 4', 1);
 
 -- --------------------------------------------------------
 
@@ -116,6 +199,26 @@ CREATE TABLE IF NOT EXISTS `permisos` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
 
+--
+-- Bolcant dades de la taula `permisos`
+--
+
+INSERT INTO `permisos` (`id`, `idusuari`, `camp`, `lectura`, `escriptura`, `idorige`) VALUES
+(1, 0, 'questionaris', 1, 0, 0),
+(2, 0, 'questionaris', 1, 0, 1),
+(3, 0, 'estimuls', 1, 0, 1),
+(4, 0, 'estimuls', 1, 0, 2),
+(5, 0, 'estimuls', 1, 0, 3),
+(6, 0, 'items', 1, 1, 0),
+(7, 0, 'items', 1, 1, 1),
+(8, 0, 'items', 1, 1, 2),
+(9, 0, 'items', 1, 1, 3),
+(10, 0, 'items', 1, 1, 4),
+(11, 0, 'items', 1, 1, 5),
+(12, 0, 'estimuls', 1, 0, 4),
+(13, 0, 'estimuls', 1, 0, 5),
+(14, 0, 'estimuls', 1, 0, 6);
+
 -- --------------------------------------------------------
 
 --
@@ -126,7 +229,15 @@ CREATE TABLE IF NOT EXISTS `questionaris` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcio` varchar(128) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Bolcant dades de la taula `questionaris`
+--
+
+INSERT INTO `questionaris` (`id`, `descripcio`) VALUES
+(0, 'Questionari 1'),
+(1, 'Questionari 2');
 
 -- --------------------------------------------------------
 
@@ -136,11 +247,20 @@ CREATE TABLE IF NOT EXISTS `questionaris` (
 
 CREATE TABLE IF NOT EXISTS `respostes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `iditem` int(11) NOT NULL,
+  `iditem_instancia` int(11) NOT NULL,
   `resposta` varchar(1024) NOT NULL,
   `idusuari` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+
+--
+-- Bolcant dades de la taula `respostes`
+--
+
+INSERT INTO `respostes` (`id`, `iditem_instancia`, `resposta`, `idusuari`) VALUES
+(10, 0, '0', 0),
+(11, 1, '0', 0),
+(12, 5, '0', 0);
 
 -- --------------------------------------------------------
 
@@ -154,7 +274,14 @@ CREATE TABLE IF NOT EXISTS `usuaris` (
   `nom` varchar(128) NOT NULL,
   `password` varchar(128) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Bolcant dades de la taula `usuaris`
+--
+
+INSERT INTO `usuaris` (`id`, `login`, `nom`, `password`) VALUES
+(0, 'vicent', 'Vicent Fernàndez i Capilla', '123');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
