@@ -86,10 +86,10 @@ else
 		$Questionari = getQuestionari();        
 	}
 }
-echo $Questionari->generateHTML();
-	
+echo $Questionari->generateHTML();	
 
 ?>
+
 
 <a href='index.php?action=tancarSessio'>Tacar Sessio</a>
 </div>

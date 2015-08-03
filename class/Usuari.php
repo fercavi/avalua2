@@ -88,6 +88,9 @@ class Usuari{
 		}
 		return $result;
 	}
+  public function esAdmin(){
+    return true;
+  }
 }
 
 ?>
