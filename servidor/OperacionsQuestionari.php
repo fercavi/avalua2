@@ -31,7 +31,6 @@ function guardarRespostesBaseDeDades(){
       $saver->guardarRespostes($uid,$Item->getId(),$Item->getRespostes());
       
 		}
-	}
-	//error_log(var_export($questionari,true));
+	}	
 }
 ?>

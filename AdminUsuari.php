@@ -6,17 +6,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/bootstrap.min.css" rel="stylesheet">   
     <script>   
-      function mostraUsuaris(data){         
-        usuaris = JSON.parse(data);
-        var html =  "<ol>";
-        for(var i=0;i<usuaris.length;i++){
-         html+= "<li>uid:"+usuaris[i].uid + ";nom:"+usuaris[i].nom + ";login:"+usuaris[i].login+"</li>";
+      var Usuaris;
+      function esborrarUsuari(uid){
+        esborrat = false;
+        for(var i=0;(i<Usuaris.length) && (!esborrat);i++){
+          if(Usuaris[i].uid==uid){
+            var peticio = {
+                url:'servidor/OperacionsTaulerControl.php',
+                type:'GET',
+                data:'accio=esborrarUsuari&uid='+uid,
+            }
+            $.ajax(peticio);
+            Usuaris.splice(i,1);
+            doMostraUsuaris(Usuaris);
+            esborrat=true;          
+          }
         }
-        html +="</ol>";        
-        $(".container").html(html+$(".container").html());
+        
+      }
+      function callBackAfegirUsuari(data){          
+          id = JSON.parse(data);
+          id = id.id;
+          usuari = { 
+            uid:id ,
+            nom:nom,
+            login:login
+          };          
+          Usuaris.push(usuari);
+          doMostraUsuaris(Usuaris);                
+      }
+      function afegirUsuari(){
+        BootstrapDialog.show({
+          title:'Introduix contrasenya',
+          message:"<input id='nouPass' type='password'></input>",
+          buttons:[ 
+          {
+            label:'Ok',
+            action: function(dialogItself){
+                      nom = $('#nomNou').val();
+                      login = $('#loginNou').val();
+                      pass = $('#nouPass').val();                      
+                      var peticio = {
+                          url:'servidor/OperacionsTaulerControl.php',
+                          type:'GET',
+                          data:'accio=crearUsuari&login='+login+"&nom="+nom+"&pass="+pass,
+                          success:function(result){ 
+                              callBackAfegirUsuari(result);
+                          }
+                      }
+                      $.ajax(peticio);
+                      dialogItself.close();
+            }
+          },
+          {
+            label:'Cancelar',
+            action:function(dialogItself){ dialogItself.close()}
+          }
+          ]
+        });
+      }
+      
+      function doMostraUsuaris(usuaris){
+        tancarSessio = "<a href='index.php?action=tancarSessio'>Tacar Sessio</a>";
+        var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>uid</th><th>nom</th><th>login</th><th>accions</th></tr></thead> ";
+        for(var i=0;i<usuaris.length;i++){
+         html+= "<tr><td>"+usuaris[i].uid + "</td><td>"+usuaris[i].nom + "</td><td>"+usuaris[i].login+"</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarUsuari("+usuaris[i].uid+")'></div></td></tr>";
+        }
+        html+= "<tr><td></td><td><input id='nomNou' type='text'/></td><td><input id='loginNou' type='text'/></td><td><div class='glyphicon glyphicon-plus' style='cursor: pointer;' onclick='afegirUsuari()'></div></td></tr>";
+        html +="</table>";        
+        $(".container").html(html+tancarSessio);
+      }
+      function mostraUsuaris(data){         
+        Usuaris = JSON.parse(data);        
+        doMostraUsuaris(Usuaris);
       }
       function carregaUsuaris(callback){
-      var peticio = {
+        var peticio = {
     			url:'servidor/OperacionsTaulerControl.php',
     			type:'GET',
     			data:'accio=llistatUsuaris',
@@ -29,17 +94,15 @@
       }
     </script>
 </head>
-  <body onload='carregaUsuaris(mostraUsuaris)'>
-  <div class='container'>
+  <body onload='carregaUsuaris(mostraUsuaris)'>  
+  <div class='container' width="60%">
 <?php
 
 
 ?>
-
-
-<a href='index.php?action=tancarSessio'>Tacar Sessio</a>
 </div>
 <script src="js/jquery.min.js"></script>    
  <script src="js/bootstrap.min.js"></script>
+ <script src="js/bootstrap-dialog.js"></script>
 </body>
 </html>
