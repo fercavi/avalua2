@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Temps de generació: 30-07-2015 a les 09:45:07
--- Versió del servidor: 5.6.19-0ubuntu0.14.04.1
+-- Temps de generació: 05-08-2015 a les 13:45:39
+-- Versió del servidor: 5.5.44-0ubuntu0.14.04.1
 -- Versió de PHP: 5.5.9-1ubuntu4.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `estimul_instancia` (
   `idestimul` int(11) NOT NULL,
   `idquestionari` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -114,7 +114,23 @@ CREATE TABLE IF NOT EXISTS `permisos` (
   `escriptura` int(11) NOT NULL,
   `idorige` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=46 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `plantilles_rol`
+--
+
+CREATE TABLE IF NOT EXISTS `plantilles_rol` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `idrol` int(11) NOT NULL,
+  `lectura` int(11) NOT NULL,
+  `escriptura` int(11) NOT NULL,
+  `camp` varchar(128) NOT NULL,
+  `idorige` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 -- --------------------------------------------------------
 
@@ -126,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `questionaris` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcio` varchar(128) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -136,11 +152,23 @@ CREATE TABLE IF NOT EXISTS `questionaris` (
 
 CREATE TABLE IF NOT EXISTS `respostes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `iditem` int(11) NOT NULL,
+  `iditem_instancia` int(11) NOT NULL,
   `resposta` varchar(1024) NOT NULL,
   `idusuari` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `rols`
+--
+
+CREATE TABLE IF NOT EXISTS `rols` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcio` varchar(128) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -153,8 +181,9 @@ CREATE TABLE IF NOT EXISTS `usuaris` (
   `login` varchar(128) NOT NULL,
   `nom` varchar(128) NOT NULL,
   `password` varchar(128) NOT NULL,
+  `estat` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

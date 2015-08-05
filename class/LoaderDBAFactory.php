@@ -9,11 +9,23 @@ class LoaderDBAMysql{
 	function loadDataFromDBA($userlogin,$idioma){
       $this->idioma = $idioma;
 	    $result = array();
-	    $Questionaris = $this->loadQuestionaris($userlogin);	
+	    $Questionaris = $this->loadQuestionaris($userlogin);	      
 	    $result["QUESTIONARIS"]=$Questionaris;
       $result["UID"]= $this->uid;
+      $result["ADMINISTRADOR"] = $this->getAdministrador($this->uid);
 	    return $result;
 	}
+  function getAdministrador($uid){
+		global $connexio;
+	  $PDOAdministrador = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+    $query="select count(*) as compte from permisos where camp='Administrador' and idusuari=$uid and lectura=1 and escriptura=1";
+    $result = false;
+		$files=$PDOAdministrador->query($query);
+		$fila=$files->fetch(PDO::FETCH_BOTH);	
+    if ($fila["compte"]!=0)
+      $result = true;
+    return $result;    
+  }
 	function loadQuestionaris($userlogin){
 		global $connexio;
 	  $PDOQuestionaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );

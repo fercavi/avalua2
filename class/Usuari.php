@@ -9,6 +9,7 @@ class Usuari{
 	private $permisos;
 	private $questionaris;
   private $uid;
+  private $esAdmin;
 
 	public function  __construct($username){
 		//loaderType: variable global en conf.php
@@ -20,6 +21,7 @@ class Usuari{
 		$dades = $loader->loadDataFromDBA($username,'val');    
 		$this->questionaris=$dades["QUESTIONARIS"];
     $this->uid = $dades["UID"];
+    $this->esAdmin = $dades["ADMINISTRADOR"];
 		//$this->loadDataFromDBA();
 		$_SESSION["USUARI"]= $this;
 	}
@@ -89,7 +91,7 @@ class Usuari{
 		return $result;
 	}
   public function esAdmin(){
-    return true;
+    return $this->esAdmin;
   }
 }
 

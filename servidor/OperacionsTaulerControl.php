@@ -18,6 +18,14 @@ require '../conf.php';
     $uid=$_GET["uid"];
     $result = esborrarUsuari($uid);
   }
+  if ($accio=='getRols'){
+    $result=getRols();
+  }
+  if ($accio=='aplicarPlantillaRolUsuari'){
+      $idplantilla=$_GET["idplantilla"];
+      $idusuari = $_GET["idusuari"];
+      $result = aplicarPlantillaRolUsuari($idplantilla,$idusuari);
+  }
   
   echo(json_encode($result));
   
@@ -52,11 +60,37 @@ require '../conf.php';
   function esborrarUsuari($id){
       global $connexio;
 	    $PDOUsuaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
-      $query = "update usuaris set estat=-1 where id=$id)";      
-      $sentencia = $PDOUsuaris->prepare($query);      
-      error_log(var_export($sentencia,true));
+      $query = "update usuaris set estat=-1 where id=$id";      
+      $sentencia = $PDOUsuaris->prepare($query);            
       $sentencia->execute();
       return array();
+  }
+  function aplicarPlantillaRolUsuari($idplantilla,$idusuari){
+      global $connexio;
+      $PDOPlantilles = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $queryEsborrar ="delete from permisos where idusuari=$idusuari";
+      $sentencia = $PDOPlantilles->prepare($queryEsborrar);            
+      $sentencia->execute();      
+      $query = "insert into permisos(idusuari,lectura,escriptura,camp,idorige)  (select $idusuari,lectura,escriptura,camp,idorige from plantilles_rol where idrol=$idplantilla) ";
+      $sentencia = $PDOPlantilles->prepare($query);            
+      error_log($query);
+      $sentencia->execute();     
+      return "OK";
+      
+  }
+  function getRols(){
+      global $connexio;
+      $PDORols = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "select id,descripcio from rols";
+      $files=$PDORols->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);		
+      $rols=array();
+      while($fila){
+        $rols[] = array("id"=>$fila["id"],"descripcio"=>$fila["descripcio"]);
+        $fila=$files->fetch(PDO::FETCH_BOTH);		
+      }
+      return $rols;
+  
   }
 
 
