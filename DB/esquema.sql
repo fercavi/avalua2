@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Temps de generació: 05-08-2015 a les 13:45:39
+-- Temps de generació: 12-08-2015 a les 14:01:22
 -- Versió del servidor: 5.5.44-0ubuntu0.14.04.1
 -- Versió de PHP: 5.5.9-1ubuntu4.11
 
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `permisos` (
   `escriptura` int(11) NOT NULL,
   `idorige` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 -- --------------------------------------------------------
 
@@ -167,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `respostes` (
 CREATE TABLE IF NOT EXISTS `rols` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcio` varchar(128) NOT NULL,
+  `estat` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 

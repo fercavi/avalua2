@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Temps de generació: 05-08-2015 a les 13:46:13
+-- Temps de generació: 12-08-2015 a les 14:00:53
 -- Versió del servidor: 5.5.44-0ubuntu0.14.04.1
 -- Versió de PHP: 5.5.9-1ubuntu4.11
 
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `permisos` (
   `escriptura` int(11) NOT NULL,
   `idorige` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 --
 -- Bolcant dades de la taula `permisos`
@@ -309,6 +309,7 @@ INSERT INTO `respostes` (`id`, `iditem_instancia`, `resposta`, `idusuari`) VALUE
 CREATE TABLE IF NOT EXISTS `rols` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcio` varchar(128) NOT NULL,
+  `estat` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
@@ -316,9 +317,9 @@ CREATE TABLE IF NOT EXISTS `rols` (
 -- Bolcant dades de la taula `rols`
 --
 
-INSERT INTO `rols` (`id`, `descripcio`) VALUES
-(0, 'Administrador'),
-(2, 'Usuari');
+INSERT INTO `rols` (`id`, `descripcio`, `estat`) VALUES
+(0, 'Administrador', 0),
+(2, 'Usuari', -1);
 
 -- --------------------------------------------------------
 
@@ -346,7 +347,7 @@ INSERT INTO `usuaris` (`id`, `login`, `nom`, `password`, `estat`) VALUES
 (3, 'asd', 'asd', '666', 0),
 (4, 'a', 'a', '666', 0),
 (5, 'b', 'b', '777', 0),
-(6, 'pepet2', 'Pepet', '202cb962ac59075b964b07152d234b70', 0);
+(6, 'pepet2', 'Pepet', '202cb962ac59075b964b07152d234b70', -1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
