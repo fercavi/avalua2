@@ -26,6 +26,15 @@ require '../conf.php';
       $idusuari = $_GET["idusuari"];
       $result = aplicarPlantillaRolUsuari($idplantilla,$idusuari);
   }
+  if($accio=='esborrarRol'){
+    $idRol = $_GET["idrol"];
+    $result=esborrarRol($idRol);
+  }
+  if($accio=='canviarNomRol'){
+    $idRol = $_GET["idrol"];
+    $nom = $_GET["nom"];
+    $result= canviarNomRol($idRol,$nom);    
+  }
   
   echo(json_encode($result));
   
@@ -81,7 +90,7 @@ require '../conf.php';
   function getRols(){
       global $connexio;
       $PDORols = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
-      $query = "select id,descripcio from rols";
+      $query = "select id,descripcio from rols where estat <>-1";
       $files=$PDORols->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
       $rols=array();
@@ -92,6 +101,22 @@ require '../conf.php';
       return $rols;
   
   }
-
+  function esborrarRol($id){
+      global $connexio;
+	    $PDORol = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "update rols set estat=-1 where id=$id";      
+      $sentencia = $PDORol->prepare($query);            
+      $sentencia->execute();
+      return "OK";
+  }
+  function canviarNomRol($id,$nom){
+      global $connexio;
+	    $PDORol = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $nom=utf8_encode($nom);
+      $query = "update rols set descripcio='$nom' where id=$id";      
+      $sentencia = $PDORol->prepare($query);            
+      $sentencia->execute();
+      return "OK";    
+  }
 
 ?>

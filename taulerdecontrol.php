@@ -19,7 +19,9 @@
 <ul>
 <li><a href='AdminUsuari.php'>Administració Usuaris</a></li>
 <li><a href='AdminQuestionaris.php'>Administrar Qüestionaris</a></li>
-<li><a href='AdminQuestionaris.php'>Administrar Plantilles d''usuaris</a></li>
+<li><a href='AdminPlantilles.php'>Administrar Plantilles d''usuaris</a></li>
+<li><a href='Paperera.php'>Paperera</a></li>
+
 </ul>
 <hr>
 <a href='index.php?action=tancarSessio'>Tacar Sessio</a>
