@@ -3,9 +3,9 @@
 require '../conf.php';
 
   session_start();	
-	if (!isset($_SESSION["USUARI"])) die();
+	if (!isset($_SESSION["USUARI"])) die();    
 	$user=$_SESSION["USUARI"];
-  $accio = $_GET["accio"];
+  $accio = $_GET["accio"];  
   if ($accio=='llistatUsuaris')
     $result = llistatUsuaris();
   if($accio=='crearUsuari'){
@@ -34,6 +34,17 @@ require '../conf.php';
     $idRol = $_GET["idrol"];
     $nom = $_GET["nom"];
     $result= canviarNomRol($idRol,$nom);    
+  }
+  if($accio=='getUsuarisEsborrats'){
+    $result = getUsuarisEsborrats();
+  }
+  if ($accio=='carregaDadesPaperera'){
+    $result = carregaDadesPaperera();
+  }
+  if ($accio=='recuperarDeTaula'){    
+    $id = $_GET["id"];
+    $taula = $_GET["taula"];    
+    $result =recuperarDeTaula($id,$taula);
   }
   
   echo(json_encode($result));
@@ -81,8 +92,7 @@ require '../conf.php';
       $sentencia = $PDOPlantilles->prepare($queryEsborrar);            
       $sentencia->execute();      
       $query = "insert into permisos(idusuari,lectura,escriptura,camp,idorige)  (select $idusuari,lectura,escriptura,camp,idorige from plantilles_rol where idrol=$idplantilla) ";
-      $sentencia = $PDOPlantilles->prepare($query);            
-      error_log($query);
+      $sentencia = $PDOPlantilles->prepare($query);                  
       $sentencia->execute();     
       return "OK";
       
@@ -117,6 +127,52 @@ require '../conf.php';
       $sentencia = $PDORol->prepare($query);            
       $sentencia->execute();
       return "OK";    
+  }
+  function recuperarDeTaula($id,$taula){
+      global $connexio;      
+	    $PDOTaula = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "update $taula set estat=0 where id=$id";      
+      $sentencia = $PDOTaula->prepare($query);            
+      $sentencia->execute();
+      return "OK";
+  }
+  function getUsuarisEsborrats(){   
+    global $connexio;
+	  $PDOUsuaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+		$query = "select id, login, nom from usuaris where estat=-1";
+		$files=$PDOUsuaris->query($query);
+		$fila=$files->fetch(PDO::FETCH_BOTH);		
+    $usuaris = array();
+    while ($fila){
+      $usuaris[]= array(
+        "nom"=>utf8_encode($fila["nom"]),
+        "uid"=>$fila["id"],
+        "login"=>utf8_encode($fila["login"]),
+      );      
+      $fila=$files->fetch(PDO::FETCH_BOTH);		
+    }    
+    return $usuaris;
+  }
+  function getRolsEsborrats(){
+      global $connexio;
+      $PDORols = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "select id,descripcio from rols where estat =-1";
+      $files=$PDORols->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);		
+      $rols=array();
+      while($fila){
+        $rols[] = array("id"=>$fila["id"],"descripcio"=>$fila["descripcio"]);
+        $fila=$files->fetch(PDO::FETCH_BOTH);		
+      }
+      return $rols;  
+  }
+  
+  function carregaDadesPaperera(){
+    $result = array(
+      "USUARIS"=>getUsuarisEsborrats(),
+      "ROLS"=>getRolsEsborrats(),
+    );
+    return $result;
   }
 
 ?>
