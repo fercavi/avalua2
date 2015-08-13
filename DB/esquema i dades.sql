@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Temps de generació: 12-08-2015 a les 14:00:53
+-- Temps de generació: 13-08-2015 a les 14:18:03
 -- Versió del servidor: 5.5.44-0ubuntu0.14.04.1
 -- Versió de PHP: 5.5.9-1ubuntu4.11
 
@@ -234,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `plantilles_rol` (
   `camp` varchar(128) NOT NULL,
   `idorige` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=33 ;
 
 --
 -- Bolcant dades de la taula `plantilles_rol`
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `rols` (
 
 INSERT INTO `rols` (`id`, `descripcio`, `estat`) VALUES
 (0, 'Administrador', 0),
-(2, 'Usuari', -1);
+(2, 'Usuari', 0);
 
 -- --------------------------------------------------------
 
