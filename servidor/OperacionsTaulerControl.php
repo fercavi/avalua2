@@ -46,6 +46,29 @@ require '../conf.php';
     $taula = $_GET["taula"];    
     $result =recuperarDeTaula($id,$taula);
   }
+  if ($accio =='getPermisosRol'){
+    $id=$_GET["id"];
+    $result = getPermisosRol($id);
+  }
+  if ($accio=='canviarPermisRol'){
+    $id=$_GET["id"];
+    $lectura=$_GET["lectura"];
+    $escriptura=$_GET["escriptura"];
+    $result = canviarPermisRol($id,$lectura,$escriptura);
+  }
+  if ($accio=='insertNouPermisRol'){
+    $idrol=$_GET["idrol"];
+    $lectura=$_GET["lectura"];
+    $escriptura=$_GET["escriptura"];
+    $camp=$_GET["camp"];
+    $idorige=$_GET["idorige"];
+    $result=insertNouPermisRol($idrol,$lectura,$escriptura,$camp,$idorige);    
+  }
+  if ($accio=='eliminaPermisRol'){
+    $idPermis = $_GET["idpermis"];
+    $result =eliminaPermisRol($idPermis);
+  }
+  
   
   echo(json_encode($result));
   
@@ -173,6 +196,44 @@ require '../conf.php';
       "ROLS"=>getRolsEsborrats(),
     );
     return $result;
+  }
+  function getPermisosRol($id){
+      global $connexio;
+      $PDOPermisos = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "select id,lectura,escriptura,camp,idorige,idrol from plantilles_rol where idrol =$id";
+      $files=$PDOPermisos->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);		
+      $permisos=array();
+      while($fila){
+        $permisos[] = array("id"=>$fila["id"],"lectura"=>$fila["lectura"],"escriptura"=>$fila["escriptura"],"camp"=>$fila["camp"],"idorige"=>$fila["idorige"],"idrol"=>$fila["idrol"]);
+        $fila=$files->fetch(PDO::FETCH_BOTH);		
+      }
+      return $permisos;    
+  }
+  function canviarPermisRol($id,$lectura,$escriptura){
+      global $connexio;
+	    $PDOPermisos = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "update plantilles_rol set lectura=$lectura, escriptura=$escriptura where id=$id";      
+      $sentencia = $PDOPermisos->prepare($query);            
+      $sentencia->execute();
+      return "OK";    
+  }
+  function insertNouPermisRol($idrol,$lectura,$escriptura,$camp,$idorige){
+      global $connexio;
+	    $PDOPermisos = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                            
+      $query = "insert into plantilles_rol(idrol,lectura,escriptura,camp,idorige) values($idrol,$lectura,$escriptura,'$camp',$idorige)";
+      $sentencia = $PDOPermisos->prepare($query);            
+      $sentencia->execute();
+      $result = array("id"=>$PDOPermisos->lastInsertId());
+      return $result;
+  }
+  function eliminaPermisRol($id){
+      global $connexio;
+	    $PDOEliminaPermis = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "delete from plantilles_rol where id=$id";      
+      $sentencia = $PDOEliminaPermis->prepare($query);            
+      $sentencia->execute();
+      return "OK";    
   }
 
 ?>

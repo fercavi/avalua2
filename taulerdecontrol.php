@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/bootstrap.min.css" rel="stylesheet">
     </head>
-  <body>
+  <body>  
   <div class='container'>
+  <a href="javascript: history.go(-1)"> Tornar</a>
 <?php
   require 'conf.php';
 	session_start();	
