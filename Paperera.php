@@ -47,6 +47,7 @@
         
       }
       function carregarTaula(){
+        tornar = " <a href='javascript: history.go(-1)'> Tornar</a>";
         var tancarSessio = "<a href='index.php?action=tancarSessio'>Tacar Sessio</a>";
         var html = "<h2>Usuaris</h2>";
         html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>uid</th><th>nom</th><th>login</th><th>accions</th></tr></thead> ";        
@@ -60,7 +61,7 @@
           html+= "<tr><td>"+Rols[i].id + "</td><td>"+Rols[i].descripcio + "</td><td><div class='glyphicon glyphicon-transfer' style='cursor: pointer;' onclick='recuperarRol("+Rols[i].id+")'> </td></tr>";
         }        
         html +="</table>";        
-        $(".container").html(html+tancarSessio);
+        $(".container").html(tornar+html+tancarSessio);
       }
       function carregaInicial(){      
             var peticio = {

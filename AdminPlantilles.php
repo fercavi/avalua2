@@ -90,10 +90,8 @@
               row.remove();   
             }
         })
-        //id=tr.find("td:first").text();;
-        
-        
       }
+
       function callBackModificarPermisos(permisos,nomRol){
       html = "<table id='taulapermisosAfegir' class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th>lectura</th><th>escriptura</th><th>camp</th><th>idorige</th><th>Accions</th></tr></thead>";
       var idrol=0;
@@ -108,7 +106,7 @@
         
         html += "<tr><td>"+permisos[i].id+"</td><td><input id='lectura_"+permisos[i].id+"' type='checkbox'"+ lectura+"></input></td><td><input id='escriptura_"+permisos[i].id+"' type='checkbox'"+ escriptura+"></input></td><td>"+permisos[i].camp+"</td><td>"+permisos[i].idorige+"</td><td><div class='glyphicon glyphicon-floppy-disk' style='cursor: pointer;' onclick='guardarPermis("+permisos[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarPermis("+permisos[i].id+")'></div></td></tr>";
       }
-      html +="<tr><td>&nbsp;</td><td><input id='lectura_Nou' type='checkbox'></input></td><td><input id='escriptura_Nou' type='checkbox'></input></td><td><select id='camp_Nou'><option value='Administrador'>Administrador</option><option value='questionaris'>questionaris</option></select></td><td><input type='text' id='idorige_Nou'></input></td><td><div class='glyphicon glyphicon-plus' style='cursor: pointer;' onclick='afegirPermis("+idrol+")'></div></td></tr>";
+      html +="<tr><td>&nbsp;</td><td><input id='lectura_Nou' type='checkbox'></input></td><td><input id='escriptura_Nou' type='checkbox'></input></td><td><select id='camp_Nou'><option value='Administrador'>Administrador</option><option value='questionaris'>questionaris</option><option value='estimuls'>estimuls</option><option value='items'>items</option></select></td><td><input type='text' id='idorige_Nou'></input></td><td><div class='glyphicon glyphicon-plus' style='cursor: pointer;' onclick='afegirPermis("+idrol+")'></div></td></tr>";
       html += "</table>";
         BootstrapDialog.show({          
           title:nomRol,
