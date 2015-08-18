@@ -34,6 +34,16 @@
         }
         recuperarTaula(id,'rols');        
       }
+      function recuperarQuestionari(id){
+        var trobat = false;
+        for(var i=0;(i<Questionaris.length)&&(!trobat);i++){
+          if(id==Questionaris[i].id){
+            trobat = true;
+            Questionaris.splice(i,1);
+          }
+        }
+        recuperarTaula(id,'questionaris');        
+      }
       function recuperarTaula(id,taula){
             var peticio = {
                           url:'servidor/OperacionsTaulerControl.php',
@@ -49,18 +59,33 @@
       function carregarTaula(){
         tornar = " <a href='javascript: history.go(-1)'> Tornar</a>";
         var tancarSessio = "<a href='index.php?action=tancarSessio'>Tacar Sessio</a>";
+        //Usuaris
         var html = "<h2>Usuaris</h2>";
         html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>uid</th><th>nom</th><th>login</th><th>accions</th></tr></thead> ";        
         for(var i=0;i<Usuaris.length;i++){
          html+= "<tr><td>"+Usuaris[i].uid + "</td><td>"+Usuaris[i].nom + "</td><td>"+Usuaris[i].login+"</td><td><div class='glyphicon glyphicon-transfer' style='cursor: pointer;' onclick='recuperarUsuari("+Usuaris[i].uid+")'></div></tr>";
         }        
-        html +="</table>";                        
+        html +="</table>";
+        //Rols
         html += "<h2>Rols</h2>";
         html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th>nom</th><th>accions</th></tr></thead> ";
         for(var i=0;i<Rols.length;i++){
           html+= "<tr><td>"+Rols[i].id + "</td><td>"+Rols[i].descripcio + "</td><td><div class='glyphicon glyphicon-transfer' style='cursor: pointer;' onclick='recuperarRol("+Rols[i].id+")'> </td></tr>";
         }        
-        html +="</table>";        
+        html +="</table>";      
+        //Questionaris
+        html += "<h2>Questionaris</h2>";
+        html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th>nom</th><th>accions</th></tr></thead> ";
+        for(var i=0;i<Questionaris.length;i++){
+          html+= "<tr><td>"+Questionaris[i].id + "</td><td>"+Questionaris[i].descripcio + "</td><td><div class='glyphicon glyphicon-transfer' style='cursor: pointer;' onclick='recuperarQuestionari("+Questionaris[i].id+")'> </td></tr>";
+        }        
+        html +="</table>";      
+        
+        
+        
+        
+        
+        
         $(".container").html(tornar+html+tancarSessio);
       }
       function carregaInicial(){      
@@ -72,6 +97,7 @@
                               dades = JSON.parse(result);
                               Usuaris = dades.USUARIS;
                               Rols = dades.ROLS;
+                              Questionaris = dades.QUESTIONARIS;
                               //questionaris,items,rols...
                               carregarTaula();
                           }               

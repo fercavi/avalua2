@@ -29,7 +29,7 @@ class LoaderDBAMysql{
 	function loadQuestionaris($userlogin){
 		global $connexio;
 	  $PDOQuestionaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
-		$query = "select U.id as uid,C.text,Q.id from questionaris Q, permisos P, usuaris U,cadenes C where P.lectura=1 and U.login='$userlogin' and U.id=P.idusuari and P.camp='questionaris' and P.idorige=Q.id And C.idorige=Q.id and C.taulaorige='questionaris' and C.camporige='nom' and C.idioma='".$this->idioma."'";		    
+		$query = "select U.id as uid,C.text,Q.id from questionaris Q, permisos P, usuaris U,cadenes C where P.lectura=1 and U.login='$userlogin' and U.id=P.idusuari and P.camp='questionaris' and P.idorige=Q.id And C.idorige=Q.id and C.taulaorige='questionaris' and C.camporige='nom' and C.idioma='".$this->idioma."' AND Q.estat<>-1";		    
 		$files=$PDOQuestionaris->query($query);
 		$fila=$files->fetch(PDO::FETCH_BOTH);		
 		$questionaris = array();

@@ -68,7 +68,15 @@ require '../conf.php';
     $idPermis = $_GET["idpermis"];
     $result =eliminaPermisRol($idPermis);
   }
-  
+  if ($accio=='eliminarQuestionari'){
+    $idQuestionari = $_GET["id"];
+    $result = eliminarQuestionari($idQuestionari);
+  }
+  if ($accio =='canviaNomQuestionari'){
+    $idQuestionari = $_GET["id"];
+    $nom = $_GET["nom"];
+    $result = canviaNomQuestionari($idQuestionari,$nom);
+  }
   
   echo(json_encode($result));
   
@@ -194,6 +202,7 @@ require '../conf.php';
     $result = array(
       "USUARIS"=>getUsuarisEsborrats(),
       "ROLS"=>getRolsEsborrats(),
+      "QUESTIONARIS"=>getQuestionarisEsborrats(),
     );
     return $result;
   }
@@ -232,6 +241,35 @@ require '../conf.php';
 	    $PDOEliminaPermis = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
       $query = "delete from plantilles_rol where id=$id";      
       $sentencia = $PDOEliminaPermis->prepare($query);            
+      $sentencia->execute();
+      return "OK";    
+  }
+  function eliminarQuestionari($id){
+      global $connexio;
+	    $PDOQuestionari = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "update questionaris set estat=-1 where id=$id";      
+      $sentencia = $PDOQuestionari->prepare($query);            
+      $sentencia->execute();
+      return "OK";    
+  }
+  function getQuestionarisEsborrats(){
+      global $connexio;
+      $PDOQuestionaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "select id,descripcio from questionaris where estat =-1";
+      $files=$PDOQuestionaris->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);		
+      $questionaris=array();
+      while($fila){
+        $questionaris[] = array("id"=>$fila["id"],"descripcio"=>$fila["descripcio"]);
+        $fila=$files->fetch(PDO::FETCH_BOTH);		
+      }
+      return $questionaris;  
+  }
+  function canviaNomQuestionari($id,$nom){
+      global $connexio;
+	    $PDOQuestionari = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "update questionaris set descripcio='$nom' where id=$id";      
+      $sentencia = $PDOQuestionari->prepare($query);            
       $sentencia->execute();
       return "OK";    
   }
