@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Temps de generació: 13-08-2015 a les 14:18:03
+-- Temps de generació: 19-08-2015 a les 14:14:53
 -- Versió del servidor: 5.5.44-0ubuntu0.14.04.1
 -- Versió de PHP: 5.5.9-1ubuntu4.11
 
@@ -266,6 +266,7 @@ INSERT INTO `plantilles_rol` (`id`, `idrol`, `lectura`, `escriptura`, `camp`, `i
 CREATE TABLE IF NOT EXISTS `questionaris` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcio` varchar(128) NOT NULL,
+  `estat` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
@@ -273,9 +274,9 @@ CREATE TABLE IF NOT EXISTS `questionaris` (
 -- Bolcant dades de la taula `questionaris`
 --
 
-INSERT INTO `questionaris` (`id`, `descripcio`) VALUES
-(0, 'Questionari 1'),
-(1, 'Questionari 2');
+INSERT INTO `questionaris` (`id`, `descripcio`, `estat`) VALUES
+(0, 'Questionari 1', 0),
+(1, 'Questionari 2', 0);
 
 -- --------------------------------------------------------
 
