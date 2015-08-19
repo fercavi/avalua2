@@ -9,7 +9,7 @@
     Questionaris = [
 <?php
    
-  require 'conf.php';
+  require_once 'conf.php';
 	session_start();	
 	if (!isset($_SESSION["USUARI"])) die();
   $user=$_SESSION["USUARI"];		
@@ -38,10 +38,20 @@
     		}
             $.ajax(peticio);
       }
-      function modificarQuestionari(id,nom){
-        html = "<input id='nouNom' type='text'>"+nom+"</input>";
+      function getNomQuestionari(id){
+        var nom = "";        
+        for(var i=0;(i<Questionaris.length)&&(nom=="");i++){
+          if (Questionaris[i].id==id)
+            nom=Questionaris[i].nom;
+        }
+        return nom;
+      }
+      function modificarQuestionari(id){
+      
+        nom = getNomQuestionari(id);        
+        html = "<input id='nouNom' type='text' value='"+nom+"'></input>";
         BootstrapDialog.show({
-            title:'Nom:',
+            title:'<?php echo $lang["NOM"]?>:',
             message:html,
             buttons:[
             {
@@ -61,18 +71,18 @@
                      }
             },
             {
-               label:'Cancelar',
+               label:'<?php echo $lang["CANCELAR"]?>',
                action: function(dialogItself){dialogItself.close();}
             }
             ]
           });        
       }
       function mostraTaula(questionaris){
-        tornar = " <a href='javascript: history.go(-1)'> Tornar</a>";
-        tancarSessio = "<a href='index.php?action=tancarSessio'>Tacar Sessio</a>";        
-        var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th>nom</th><th>accions</th></tr></thead> ";
+        tornar = " <a href='javascript: history.go(-1)'> <?php echo $lang["TORNAR"]?></a>";
+        tancarSessio = "<a href='index.php?action=tancarSessio'><?php echo $lang["TANCARSESSIO"]?></a>";        
+        var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["NOM"]?></th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
         for(var i=0;i<questionaris.length;i++){
-         html+= "<tr><td>"+questionaris[i].id + "</td><td>"+questionaris[i].nom + "</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarQuestionari("+questionaris[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-user' style='cursor: pointer;' onclick='modificarQuestionari("+questionaris[i].id+",\'"+questionaris[i].nom+"\')'> </td></tr>";
+         html+= "<tr><td>"+questionaris[i].id + "</td><td>"+questionaris[i].nom + "</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarQuestionari("+questionaris[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-user' style='cursor: pointer;' onclick='modificarQuestionari("+questionaris[i].id+")'> </td></tr>";
         }
       
          html +="</table>";
@@ -89,10 +99,6 @@
 </head>
   <body onLoad='carregaTaulaQuestionaris()'>  
   <div class='container' width="60%">
-<?php
-
-
-?>
 </div>
 <script src="js/jquery.min.js"></script>    
  <script src="js/bootstrap.min.js"></script>

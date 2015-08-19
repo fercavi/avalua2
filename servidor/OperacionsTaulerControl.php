@@ -77,7 +77,9 @@ require '../conf.php';
     $nom = $_GET["nom"];
     $result = canviaNomQuestionari($idQuestionari,$nom);
   }
-  
+  //actualitzem les dades
+  $user->reloadData();
+  $_SESSION["USUARI"] = $user;
   echo(json_encode($result));
   
   

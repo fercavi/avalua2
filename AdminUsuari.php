@@ -1,3 +1,13 @@
+
+<?php
+
+ require_once 'conf.php';  
+	session_start();	
+	if (!isset($_SESSION["USUARI"])) die();
+	$user=$_SESSION["USUARI"];
+  
+  
+?>
 <!DOCTYPE html>
 <html lang="ca">
   <head>
@@ -45,7 +55,7 @@
           selectHTML +="</select>";
           
           BootstrapDialog.show({
-            title:'Selecciona Rol',
+            title:'<?php echo $lang["SELECCIONAROL"]?>',
             message:selectHTML,
             buttons:[
             {
@@ -65,7 +75,7 @@
                      }
             },
             {
-               label:'Cancelar',
+               label:'<?php echo $lang["CANCELAR"]?>',
                action: function(dialogItself){dialogItself.close();}
             }
             ]
@@ -85,7 +95,7 @@
       }
       function afegirUsuari(){
         BootstrapDialog.show({
-          title:'Introduix contrasenya',
+          title:'<?php echo $lang["INTRODUIXCONTRASENYA"]?>',
           message:"<input id='nouPass' type='password'></input>",
           buttons:[ 
           {
@@ -108,7 +118,7 @@
             }
           },
           {
-            label:'Cancelar',
+            label:'<?php echo $lang["CANCELAR"]?>',
             action:function(dialogItself){ dialogItself.close()}
           }
           ]
@@ -116,9 +126,9 @@
       }
       
       function doMostraUsuaris(usuaris){
-        tornar = " <a href='javascript: history.go(-1)'> Tornar</a>";
-        tancarSessio = "<a href='index.php?action=tancarSessio'>Tacar Sessio</a>";
-        var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>uid</th><th>nom</th><th>login</th><th>accions</th></tr></thead> ";
+        tornar = " <a href='javascript: history.go(-1)'> <?php echo $lang["TORNAR"]?></a>";
+        tancarSessio = "<a href='index.php?action=tancarSessio'><?php echo $lang["TANCARSESSIO"]?></a>";
+        var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>uid</th><th><?php echo $lang["NOM"]?></th><th>Login</th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
         for(var i=0;i<usuaris.length;i++){
          html+= "<tr><td>"+usuaris[i].uid + "</td><td>"+usuaris[i].nom + "</td><td>"+usuaris[i].login+"</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarUsuari("+usuaris[i].uid+")'></div>&nbsp;<div class='glyphicon glyphicon-user' style='cursor: pointer;' onclick='canviarRol("+usuaris[i].uid+")'> </td></tr>";
         }
@@ -147,10 +157,7 @@
 </head>
   <body onload='carregaUsuaris(mostraUsuaris)'>  
   <div class='container' width="60%">
-<?php
 
-
-?>
 </div>
 <script src="js/jquery.min.js"></script>    
  <script src="js/bootstrap.min.js"></script>

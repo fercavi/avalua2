@@ -1,3 +1,13 @@
+
+<?php
+
+ require_once 'conf.php';  
+	session_start();	
+	if (!isset($_SESSION["USUARI"])) die();
+	$user=$_SESSION["USUARI"];
+  
+  
+?>
 <!DOCTYPE html>
 <html lang="ca">
   <head>
@@ -57,25 +67,25 @@
         
       }
       function carregarTaula(){
-        tornar = " <a href='javascript: history.go(-1)'> Tornar</a>";
-        var tancarSessio = "<a href='index.php?action=tancarSessio'>Tacar Sessio</a>";
+        tornar = " <a href='javascript: history.go(-1)'> <?php echo $lang["TORNAR"]?></a>";
+        var tancarSessio = "<a href='index.php?action=tancarSessio'><?php echo $lang["TANCARSESSIO"]?></a>";
         //Usuaris
-        var html = "<h2>Usuaris</h2>";
-        html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>uid</th><th>nom</th><th>login</th><th>accions</th></tr></thead> ";        
+        var html = "<h2><?php echo $lang["USUARIS"]?></h2>";
+        html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>uid</th><th><?php echo $lang["NOM"]?></th><th>Login</th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";        
         for(var i=0;i<Usuaris.length;i++){
          html+= "<tr><td>"+Usuaris[i].uid + "</td><td>"+Usuaris[i].nom + "</td><td>"+Usuaris[i].login+"</td><td><div class='glyphicon glyphicon-transfer' style='cursor: pointer;' onclick='recuperarUsuari("+Usuaris[i].uid+")'></div></tr>";
         }        
         html +="</table>";
         //Rols
-        html += "<h2>Rols</h2>";
-        html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th>nom</th><th>accions</th></tr></thead> ";
+        html += "<h2><?php echo $lang["ROLS"]?></h2>";
+        html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["NOM"]?></th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
         for(var i=0;i<Rols.length;i++){
           html+= "<tr><td>"+Rols[i].id + "</td><td>"+Rols[i].descripcio + "</td><td><div class='glyphicon glyphicon-transfer' style='cursor: pointer;' onclick='recuperarRol("+Rols[i].id+")'> </td></tr>";
         }        
         html +="</table>";      
         //Questionaris
-        html += "<h2>Questionaris</h2>";
-        html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th>nom</th><th>accions</th></tr></thead> ";
+        html += "<h2><?php echo $lang["QUESTIONARIS"]?></h2>";
+        html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["NOM"]?></th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
         for(var i=0;i<Questionaris.length;i++){
           html+= "<tr><td>"+Questionaris[i].id + "</td><td>"+Questionaris[i].descripcio + "</td><td><div class='glyphicon glyphicon-transfer' style='cursor: pointer;' onclick='recuperarQuestionari("+Questionaris[i].id+")'> </td></tr>";
         }        
@@ -107,10 +117,6 @@
     </script>
     <body onLoad="carregaInicial()">
   <div class='container'>
-<?php
-
-
-?>
 
 
 <hr/>

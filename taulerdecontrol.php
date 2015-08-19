@@ -8,24 +8,24 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     </head>
   <body>  
-  <div class='container'>
-  <a href="javascript: history.go(-1)"> Tornar</a>
+  <div class='container'>  
 <?php
-  require 'conf.php';
+  require_once 'conf.php';  
 	session_start();	
 	if (!isset($_SESSION["USUARI"])) die();
 	$user=$_SESSION["USUARI"];
   
 ?>
+<a href="javascript: history.go(-1)"> <?php echo $lang["TORNAR"]?></a>
 <ul>
-<li><a href='AdminUsuari.php'>Administració Usuaris</a></li>
-<li><a href='AdminQuestionaris.php'>Administrar Qüestionaris</a></li>
-<li><a href='AdminPlantilles.php'>Administrar Plantilles d''usuaris</a></li>
-<li><a href='Paperera.php'>Paperera</a></li>
+<li><a href='AdminUsuari.php'><?php echo $lang["ADMINISTRACIOUSUARIS"]?></a></li>
+<li><a href='AdminQuestionaris.php'><?php echo  $lang["ADMINISTRACIOQUESTIONARIS"]?></a></li>
+<li><a href='AdminPlantilles.php'><?php echo  $lang["ADMINISTRACIÓPLANTILLESUSUARIS"]?></a></li>
+<li><a href='Paperera.php'><?php echo  $lang["PAPERERA"]?></a></li>
 
 </ul>
 <hr>
-<a href='index.php?action=tancarSessio'>Tacar Sessio</a>
+<a href='index.php?action=tancarSessio'><?php echo $lang["TANCARSESSIO"]?></a>
 </div>
 
 <script src="js/jquery.min.js"></script>    

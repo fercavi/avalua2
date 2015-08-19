@@ -7,6 +7,8 @@ function __autoload($class_name) {
 $loaderType = LoaderDBAFactory::LoaderDBAMysqlType;
 $saverType = SaverDBAFactory::SaverDBAMysqlType;
 
+require_once('lang/val.php');
+
 
 
 $connexio = array(

@@ -1,4 +1,13 @@
 
+<?php
+
+ require_once 'conf.php';  
+	session_start();	
+	if (!isset($_SESSION["USUARI"])) die();
+	$user=$_SESSION["USUARI"];
+  
+  
+?>
 <!DOCTYPE html>
 <html lang="ca">
   <head>
@@ -93,7 +102,7 @@
       }
 
       function callBackModificarPermisos(permisos,nomRol){
-      html = "<table id='taulapermisosAfegir' class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th>lectura</th><th>escriptura</th><th>camp</th><th>idorige</th><th>Accions</th></tr></thead>";
+      html = "<table id='taulapermisosAfegir' class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["LECTURA"] ?></th><th><?php echo $lang["ESCRIPTURA"] ?></th><th><?php echo $lang["CAMP"] ?></th><th><?php echo $lang["IDORIGE"] ?></th><th><?php echo $lang["ACCIONS"] ?></th></tr></thead>";
       var idrol=0;
       for(var i=0;i<permisos.length;i++){
         var lectura = "";
@@ -144,7 +153,7 @@
             }
           }
           BootstrapDialog.show({          
-          title:'Introduix nou nom',
+          title:'<?php echo $lang["INTRODUIXNOUNOM"]?>',
           message:"<input id='nouNom' type='text' value='"+nom+"'></input>",
           buttons:[           {          
           label:'Ok',
@@ -179,9 +188,9 @@
           
       }
       function carregarTaulaRols(dataRols){   
-        tornar = " <a href='javascript: history.go(-1)'> Tornar</a>";
-        tancarSessio = "<a href='index.php?action=tancarSessio'>Tacar Sessio</a>";
-        var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th>nom</th><th>accions</th></tr></thead> ";
+        tornar = " <a href='javascript: history.go(-1)'> <?php echo $lang["TORNAR"] ?></a>";
+        tancarSessio = "<a href='index.php?action=tancarSessio'><?php echo $lang["TANCARSESSIO"] ?></a>";
+        var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["NOM"] ?></th><th><?php echo $lang["ACCIONS"] ?></th></tr></thead> ";
         for(var i=0;i<dataRols.length;i++){
          html+= "<tr><td>"+dataRols[i].id + "</td><td>"+dataRols[i].descripcio + "</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarRol("+dataRols[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-pencil' style='cursor: pointer;' onclick='canviarRol("+dataRols[i].id+")'></div> &nbsp; <div class='glyphicon glyphicon-list-alt' style='cursor: pointer;' onclick='modificarPermisos("+dataRols[i].id+",\""+dataRols[i].descripcio+"\")'></div> </td></tr>";
         }
@@ -208,9 +217,7 @@
   <body onLoad="carregaInicial()">
   <div class='container'>
   
-<?php
 
-?>
 
 <hr/>
 <a href='index.php?action=tancarSessio'>Tacar Sessio</a>

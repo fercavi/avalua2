@@ -10,21 +10,32 @@ class Usuari{
 	private $questionaris;
   private $uid;
   private $esAdmin;
+  private $idioma;
 
 	public function  __construct($username){
 		//loaderType: variable global en conf.php
 		session_start(); //per a poder guardar l'usuari		
 		$this->username=$username;
-
+    $this->idioma = 'val';
 		global $loaderType;
 		$loader = LoaderDBAFactory::getDBALoader($loaderType);
-		$dades = $loader->loadDataFromDBA($username,'val');    
+		$dades = $loader->loadDataFromDBA($username,$this->idioma);    
 		$this->questionaris=$dades["QUESTIONARIS"];
     $this->uid = $dades["UID"];
     $this->esAdmin = $dades["ADMINISTRADOR"];
 		//$this->loadDataFromDBA();
-		$_SESSION["USUARI"]= $this;
+		$_SESSION["USUARI"]= $this;    
 	}
+  public function reloadData(){
+  
+ 		global $loaderType;
+		$loader = LoaderDBAFactory::getDBALoader($loaderType);
+		$dades = $loader->loadDataFromDBA($this->username,$this->idioma);    
+		$this->questionaris=$dades["QUESTIONARIS"];
+    $this->uid = $dades["UID"];
+    $this->esAdmin = $dades["ADMINISTRADOR"];
+
+  }
 	private function loadDataFromDBA(){
 		//Dummy for test purposes
 			if ($this->username=='Pepet') {

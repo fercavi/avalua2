@@ -10,7 +10,7 @@
   <body>
   <div class='container'>
 <?php
-	require 'conf.php';
+	require 'conf.php';  
 	session_start();	
 	if (!isset($_SESSION["USUARI"])) die();
 	$user=$_SESSION["USUARI"];		
@@ -24,12 +24,13 @@
 <hr/>
 
 <?php
+global $lang;
 if ($user->esAdmin()){
-echo "<a href='taulerdecontrol.php'>Tauler de Control</a>";;
+echo "<a href='taulerdecontrol.php'>".$lang["TAULERCONTROL"]."</a>";;
 }
 ?>
 <hr/>
-<a href='index.php?action=tancarSessio'>Tacar Sessio</a>
+<a href='index.php?action=tancarSessio'><?php echo $lang["TANCARSESSIO"]?></a>
 </div>
 <script src="js/jquery.min.js"></script>    
  <script src="js/bootstrap.min.js"></script>
