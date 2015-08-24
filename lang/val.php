@@ -6,6 +6,8 @@
   "ACCIONS"=>"Accions",
   "TAULERCONTROL"=>"Tauler de control",
   "ADMINISTRACIOUSUARIS"=>"Administració d'usuaris",
+  "ADMINISTRACIOESTIMULS"=>"Administració d'estímuls",
+  "ADMINISTRACIOITEMS"=>"Administració d'ítems",
   "ADMINISTRACIOQUESTIONARIS"=>"Administració de qüestionaris",
   "ADMINISTRACIÓPLANTILLESUSUARIS"=>"Administració de plantilles d'usuaris",
   "PAPERERA"=>"Paperera",
@@ -19,8 +21,10 @@
   "SELECCIONAROL"=>"Selecciona rol",
   "CANCELAR"=>"Cancel·lar",
   "INTRODUIXCONTRASENYA"=>"Introduïx contrasenya",
-  "INTRODUIXNOUNOM"=>"Introduïx nou nom",
-  
+  "INTRODUIXNOUNOM"=>"Introduïx nou nom",  
+  "ESTIMULS" => "Estímuls",
+  "ITEMS" => "Ítems",
+  "ENUNCIAT" => "Enunciat",
  );
 
 ?>

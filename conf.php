@@ -18,4 +18,6 @@ $connexio = array(
 	"DBA"=>"avalua3"
 	);
 
+  
+$idiomes = "[{id:0,descripcio:'valencià',flag:'img/valencia.png',codi:'val'}]";
 ?>

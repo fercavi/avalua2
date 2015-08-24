@@ -20,6 +20,8 @@
 <ul>
 <li><a href='AdminUsuari.php'><?php echo $lang["ADMINISTRACIOUSUARIS"]?></a></li>
 <li><a href='AdminQuestionaris.php'><?php echo  $lang["ADMINISTRACIOQUESTIONARIS"]?></a></li>
+<li><a href='AdminEstimuls.php'><?php echo  $lang["ADMINISTRACIOESTIMULS"]?></a></li>
+<li><a href='AdminItems.php'><?php echo  $lang["ADMINISTRACIOITEMS"]?></a></li>
 <li><a href='AdminPlantilles.php'><?php echo  $lang["ADMINISTRACIÓPLANTILLESUSUARIS"]?></a></li>
 <li><a href='Paperera.php'><?php echo  $lang["PAPERERA"]?></a></li>
 

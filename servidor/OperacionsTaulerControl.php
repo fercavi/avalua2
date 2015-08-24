@@ -1,5 +1,4 @@
 <?php
-
 require '../conf.php';
 
   session_start();	
@@ -74,9 +73,50 @@ require '../conf.php';
   }
   if ($accio =='canviaNomQuestionari'){
     $idQuestionari = $_GET["id"];
-    $nom = $_GET["nom"];
+    $nom = utf8_decode($_GET["nom"]);
     $result = canviaNomQuestionari($idQuestionari,$nom);
   }
+  if ($accio =='canviaNomEstimul'){
+    $idQuestionari = $_GET["id"];
+    $nom = utf8_decode($_GET["nom"]);
+    $result = canviaNomEstimul($idQuestionari,$nom);
+  }
+  if ($accio =='canviaNomItem'){
+    $idQuestionari = $_GET["id"];
+    $nom = utf8_decode($_GET["nom"]);
+    $result = canviaNomItem($idQuestionari,$nom);
+  }
+  if ($accio=='getEstimuls'){
+    $result=getEstimuls();
+  }
+  if ($accio=='esborrarEstimul'){
+    $id = $_GET["id"];
+    $result=esborrarEstimul($id);
+  }
+  if ($accio=='getItems'){
+    $result=getItems();
+  }
+  if ($accio=='esborrarItem'){
+    $id = $_GET["id"];
+    $result=esborrarItem($id);
+  }
+  if ($accio=='getCadena'){
+     $id = $_GET["id"];
+     $taula = $_GET["taula"];
+     $camp = $_GET["camp"];
+     $idioma = $_GET["idioma"];
+     $result = getCadena($id,$taula,$camp,$idioma);
+     
+  }
+  if ($accio=='setCadena'){
+     $id = $_GET["id"];
+     $taula = $_GET["taula"];
+     $camp = $_GET["camp"];
+     $idioma = $_GET["idioma"];
+     $text = $_GET["text"];
+     $result = setCadena($id,$taula,$camp,$idioma,$text);     
+  }
+  
   //actualitzem les dades
   $user->reloadData();
   $_SESSION["USUARI"] = $user;
@@ -194,17 +234,44 @@ require '../conf.php';
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
       $rols=array();
       while($fila){
-        $rols[] = array("id"=>$fila["id"],"descripcio"=>$fila["descripcio"]);
+        $rols[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]));
         $fila=$files->fetch(PDO::FETCH_BOTH);		
       }
       return $rols;  
   }
-  
+  function getEstimulsEsborrats(){
+   global $connexio;
+      $PDOEstimuls = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "select id,descripcio from estimuls  where estat =-1";
+      $files=$PDOEstimuls->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);		
+      $estimuls=array();
+      while($fila){
+        $estimuls[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]));
+        $fila=$files->fetch(PDO::FETCH_BOTH);		
+      }
+      return $estimuls;  
+  }
+  function getItemsEsborrats(){
+   global $connexio;
+      $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "select id,descripcio from items  where estat =-1";
+      $files=$PDOItems->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);		
+      $items=array();
+      while($fila){
+        $items[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]));
+        $fila=$files->fetch(PDO::FETCH_BOTH);		
+      }
+      return $items;  
+  }
   function carregaDadesPaperera(){
     $result = array(
       "USUARIS"=>getUsuarisEsborrats(),
       "ROLS"=>getRolsEsborrats(),
       "QUESTIONARIS"=>getQuestionarisEsborrats(),
+      "ESTIMULS" => getEstimulsEsborrats(),
+      "ITEMS"=>getItemsEsborrats(),
     );
     return $result;
   }
@@ -262,7 +329,7 @@ require '../conf.php';
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
       $questionaris=array();
       while($fila){
-        $questionaris[] = array("id"=>$fila["id"],"descripcio"=>$fila["descripcio"]);
+        $questionaris[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]));
         $fila=$files->fetch(PDO::FETCH_BOTH);		
       }
       return $questionaris;  
@@ -275,5 +342,81 @@ require '../conf.php';
       $sentencia->execute();
       return "OK";    
   }
-
+   function canviaNomEstimul($id,$nom){
+      global $connexio;
+	    $PDOEstimul = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "update estimuls set descripcio='$nom' where id=$id";      
+      $sentencia = $PDOEstimul->prepare($query);            
+      $sentencia->execute();
+      return "OK";    
+  }
+   function canviaNomItem($id,$nom){
+      global $connexio;
+	    $PDOItem = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "update items  set descripcio='$nom' where id=$id";      
+      $sentencia = $PDOItem->prepare($query);            
+      $sentencia->execute();
+      return "OK";    
+  }
+   function getItems(){
+      global $connexio;
+      $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "select id,descripcio from items where estat <>-1";
+      $files=$PDOItems->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);		
+      $Items=array();
+      while($fila){
+        $Items[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]));
+        $fila=$files->fetch(PDO::FETCH_BOTH);		
+      }      
+      return $Items;  
+  }
+  function getEstimuls(){
+      global $connexio;
+      $PDOEstimuls = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+      $query = "select id,descripcio from estimuls where estat <>-1";
+      $files=$PDOEstimuls->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);		
+      $Estimuls=array();
+      while($fila){
+        $Estimuls[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]));
+        $fila=$files->fetch(PDO::FETCH_BOTH);		
+      }      
+      return $Estimuls;  
+  }
+    function esborrarEstimul($id){
+      global $connexio;
+	    $PDOEstimul = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "update estimuls set estat = -1 where id=$id";          
+      $sentencia = $PDOEstimul->prepare($query);            
+      $sentencia->execute();
+      return "OK";    
+  }
+    function esborrarItem($id){
+      global $connexio;
+	    $PDOItem = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "update items set estat = -1 where id=$id";                
+      $sentencia = $PDOItem->prepare($query);            
+      $sentencia->execute();
+      return "OK";    
+  }
+  function getCadena($id,$taula,$camp,$idioma){
+      $cadena = '';
+      global $connexio;
+	    $PDOCadena = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "select text from cadenes where idorige=$id and taulaorige='$taula' and camporige='$camp' and idioma=$idioma";      
+      $files=$PDOCadena->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);
+      if ($fila) $cadena = $fila["text"];
+      return $cadena;
+  }
+  function setCadena($id,$taula,$camp,$idioma,$text){   
+      global $connexio;
+	    $PDOCadena = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $query = "update cadenes set text='$text' where idorige=$id and taulaorige='$taula' and camporige='$camp' and idioma=$idioma";   
+      error_log($query);
+      $sentencia = $PDOCadena->prepare($query);            
+      $sentencia->execute();
+      return "OK";
+  }
 ?>

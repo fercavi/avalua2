@@ -3,8 +3,9 @@
 
  require_once 'conf.php';  
 	session_start();	
-	if (!isset($_SESSION["USUARI"])) die();
+	if (!isset($_SESSION["USUARI"])) die();  
 	$user=$_SESSION["USUARI"];
+  if(!$user->esAdmin()) die();
   
   
 ?>

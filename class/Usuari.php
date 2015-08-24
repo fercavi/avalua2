@@ -16,7 +16,7 @@ class Usuari{
 		//loaderType: variable global en conf.php
 		session_start(); //per a poder guardar l'usuari		
 		$this->username=$username;
-    $this->idioma = 'val';
+    $this->idioma = 0;
 		global $loaderType;
 		$loader = LoaderDBAFactory::getDBALoader($loaderType);
 		$dades = $loader->loadDataFromDBA($username,$this->idioma);    

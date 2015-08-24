@@ -5,7 +5,7 @@
 	session_start();	
 	if (!isset($_SESSION["USUARI"])) die();
 	$user=$_SESSION["USUARI"];
-  
+  if(!$user->esAdmin()) die();
   
 ?>
 <!DOCTYPE html>
@@ -54,6 +54,27 @@
         }
         recuperarTaula(id,'questionaris');        
       }
+     function recuperarEstimul(id){
+        var trobat = false;
+        for(var i=0;(i<Estimuls.length)&&(!trobat);i++){
+          if(id==Estimuls[i].id){
+            trobat = true;
+            Estimuls.splice(i,1);
+          }
+        }
+        recuperarTaula(id,'estimuls');        
+      }
+     function recuperarItem(id){
+        var trobat = false;
+        for(var i=0;(i<Items.length)&&(!trobat);i++){
+          if(id==Items[i].id){
+            trobat = true;
+            Items.splice(i,1);
+          }
+        }
+        recuperarTaula(id,'items');        
+      }
+      
       function recuperarTaula(id,taula){
             var peticio = {
                           url:'servidor/OperacionsTaulerControl.php',
@@ -92,7 +113,21 @@
         html +="</table>";      
         
         
+        //Estimuls
+        html += "<h2><?php echo $lang["ESTIMULS"]?></h2>";
+        html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["NOM"]?></th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
+        for(var i=0;i<Estimuls.length;i++){
+          html+= "<tr><td>"+Estimuls[i].id + "</td><td>"+Estimuls[i].descripcio + "</td><td><div class='glyphicon glyphicon-transfer' style='cursor: pointer;' onclick='recuperarEstimul("+Estimuls[i].id+")'> </td></tr>";
+        }        
+        html +="</table>";      
         
+        //Items
+        html += "<h2><?php echo $lang["ITEMS"]?></h2>";
+        html +=  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["NOM"]?></th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
+        for(var i=0;i<Items.length;i++){
+          html+= "<tr><td>"+Items[i].id + "</td><td>"+Items[i].descripcio + "</td><td><div class='glyphicon glyphicon-transfer' style='cursor: pointer;' onclick='recuperarItem("+Items[i].id+")'> </td></tr>";
+        }        
+        html +="</table>";      
         
         
         
@@ -108,6 +143,8 @@
                               Usuaris = dades.USUARIS;
                               Rols = dades.ROLS;
                               Questionaris = dades.QUESTIONARIS;
+                              Estimuls = dades.ESTIMULS;
+                              Items = dades.ITEMS;
                               //questionaris,items,rols...
                               carregarTaula();
                           }               

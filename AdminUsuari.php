@@ -5,8 +5,7 @@
 	session_start();	
 	if (!isset($_SESSION["USUARI"])) die();
 	$user=$_SESSION["USUARI"];
-  
-  
+  if(!$user->esAdmin()) die();
 ?>
 <!DOCTYPE html>
 <html lang="ca">
