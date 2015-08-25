@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Temps de generació: 19-08-2015 a les 14:15:22
+-- Temps de generació: 25-08-2015 a les 14:09:50
 -- Versió del servidor: 5.5.44-0ubuntu0.14.04.1
 -- Versió de PHP: 5.5.9-1ubuntu4.11
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `cadenes` (
   `idioma` varchar(16) NOT NULL,
   `text` varchar(1024) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
 
 -- --------------------------------------------------------
 
@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `cadenes` (
 CREATE TABLE IF NOT EXISTS `estimuls` (
   `id` int(11) NOT NULL,
   `descripcio` varchar(128) NOT NULL,
+  `estat` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`,`descripcio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -64,14 +65,29 @@ CREATE TABLE IF NOT EXISTS `estimul_instancia` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de la taula `idioma`
+--
+
+CREATE TABLE IF NOT EXISTS `idioma` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcio` varchar(128) NOT NULL,
+  `flag` varchar(256) NOT NULL,
+  `codi` varchar(8) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de la taula `items`
 --
 
 CREATE TABLE IF NOT EXISTS `items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcio` varchar(128) NOT NULL,
+  `estat` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -130,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `plantilles_rol` (
   `camp` varchar(128) NOT NULL,
   `idorige` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=33 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 -- --------------------------------------------------------
 
@@ -157,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `respostes` (
   `resposta` varchar(1024) NOT NULL,
   `idusuari` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
 
 -- --------------------------------------------------------
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Temps de generació: 19-08-2015 a les 14:14:53
+-- Temps de generació: 25-08-2015 a les 14:09:28
 -- Versió del servidor: 5.5.44-0ubuntu0.14.04.1
 -- Versió de PHP: 5.5.9-1ubuntu4.11
 
@@ -34,39 +34,39 @@ CREATE TABLE IF NOT EXISTS `cadenes` (
   `idioma` varchar(16) NOT NULL,
   `text` varchar(1024) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
 
 --
 -- Bolcant dades de la taula `cadenes`
 --
 
 INSERT INTO `cadenes` (`id`, `idorige`, `taulaorige`, `camporige`, `idioma`, `text`) VALUES
-(1, 0, 'questionaris', 'nom', 'val', 'Questionari 1'),
-(2, 1, 'questionaris', 'nom', 'val', 'Questionari 2'),
-(3, 0, 'Items', 'enunciat', 'val', 'Pregunta 0'),
-(4, 1, 'Items', 'enunciat', 'val', 'Pregunta 1'),
-(5, 2, 'Items', 'enunciat', 'val', 'Pregunta 2'),
-(6, 3, 'Items', 'enunciat', 'val', 'Pregunta 3'),
-(7, 4, 'Items', 'enunciat', 'val', 'Pregunta 4'),
-(8, 5, 'Items', 'enunciat', 'val', 'Pregunta 5'),
-(9, 1, 'opcions', 'valor', 'val', 'Opció 1'),
-(10, 2, 'opcions', 'valor', 'val', 'Opció 2'),
-(11, 3, 'opcions', 'valor', 'val', 'Opció 3'),
-(12, 4, 'opcions', 'valor', 'val', 'Opció 4'),
-(13, 5, 'opcions', 'valor', 'val', 'Opció 1'),
-(14, 6, 'opcions', 'valor', 'val', 'Opció 2'),
-(15, 7, 'opcions', 'valor', 'val', 'Opció 3'),
-(16, 8, 'opcions', 'valor', 'val', 'Opció 4'),
-(17, 9, 'opcions', 'valor', 'val', 'Opció 1'),
-(18, 10, 'opcions', 'valor', 'val', 'Opció 2'),
-(19, 11, 'opcions', 'valor', 'val', 'Opció 3'),
-(20, 12, 'opcions', 'valor', 'val', 'Opció 4'),
-(21, 0, 'estimuls', 'titol', 'val', 'Estímul 1'),
-(22, 0, 'estimuls', 'enunciat', 'val', 'enunciat de l''estímul 1'),
-(23, 1, 'estimuls', 'titol', 'val', 'Estímul 2'),
-(24, 1, 'estimuls', 'enunciat', 'val', 'enunciat de l''estímul 2'),
-(25, 2, 'estimuls', 'titol', 'val', 'Estímul 3'),
-(26, 2, 'estimuls', 'enunciat', 'val', 'enunciat de l''estímul 3');
+(1, 0, 'questionaris', 'nom', '0', 'Questionari 1'),
+(2, 1, 'questionaris', 'nom', '0', 'Questionari 2'),
+(3, 0, 'items', 'enunciat', '0', '<p><strong>Pregunta</strong> 0</p>'),
+(4, 1, 'items', 'enunciat', '0', 'Pregunta 1'),
+(5, 2, 'items', 'enunciat', '0', 'Pregunta 2'),
+(6, 3, 'items', 'enunciat', '0', 'Pregunta 3'),
+(7, 4, 'items', 'enunciat', '0', 'Pregunta 4'),
+(8, 5, 'items', 'enunciat', '0', 'Pregunta 5'),
+(9, 1, 'opcions', 'valor', '0', 'Opció 1'),
+(10, 2, 'opcions', 'valor', '0', 'Opció 2'),
+(11, 3, 'opcions', 'valor', '0', 'Opció 3'),
+(12, 4, 'opcions', 'valor', '0', 'Opció 4'),
+(13, 5, 'opcions', 'valor', '0', 'Opció 1'),
+(14, 6, 'opcions', 'valor', '0', 'Opció 2'),
+(15, 7, 'opcions', 'valor', '0', 'Opció 3'),
+(16, 8, 'opcions', 'valor', '0', 'Opció 4'),
+(17, 9, 'opcions', 'valor', '0', 'Opció 1'),
+(18, 10, 'opcions', 'valor', '0', 'Opció 2'),
+(19, 11, 'opcions', 'valor', '0', 'Opció 3'),
+(20, 12, 'opcions', 'valor', '0', 'Opció 4'),
+(21, 0, 'estimuls', 'titol', '0', '<p>Estímul 1</p>'),
+(22, 0, 'estimuls', 'enunciat', '0', '<p>enunciat de l&apos;estímul 1</p>'),
+(23, 1, 'estimuls', 'titol', '0', '<p>Estímul 2</p>'),
+(24, 1, 'estimuls', 'enunciat', '0', '<p><strong>enunciat</strong> de l&apos;estímul 2</p>'),
+(25, 2, 'estimuls', 'titol', '0', '<p>Estímul 3</p>'),
+(26, 2, 'estimuls', 'enunciat', '0', '<p><strong>enunciat</strong> de l&#8217;estímul&nbsp; 3</p>');
 
 -- --------------------------------------------------------
 
@@ -77,6 +77,7 @@ INSERT INTO `cadenes` (`id`, `idorige`, `taulaorige`, `camporige`, `idioma`, `te
 CREATE TABLE IF NOT EXISTS `estimuls` (
   `id` int(11) NOT NULL,
   `descripcio` varchar(128) NOT NULL,
+  `estat` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`,`descripcio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -84,10 +85,10 @@ CREATE TABLE IF NOT EXISTS `estimuls` (
 -- Bolcant dades de la taula `estimuls`
 --
 
-INSERT INTO `estimuls` (`id`, `descripcio`) VALUES
-(0, 'Estímul 1'),
-(1, 'Estímul 2'),
-(2, 'Estímul 3');
+INSERT INTO `estimuls` (`id`, `descripcio`, `estat`) VALUES
+(0, 'Estímul 1', 0),
+(1, 'Estímul 2', 0),
+(2, 'Estímul 3', 0);
 
 -- --------------------------------------------------------
 
@@ -117,14 +118,48 @@ INSERT INTO `estimul_instancia` (`id`, `idestimul`, `idquestionari`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de la taula `idioma`
+--
+
+CREATE TABLE IF NOT EXISTS `idioma` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcio` varchar(128) NOT NULL,
+  `flag` varchar(256) NOT NULL,
+  `codi` varchar(8) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Bolcant dades de la taula `idioma`
+--
+
+INSERT INTO `idioma` (`id`, `descripcio`, `flag`, `codi`) VALUES
+(1, 'valencià', 'img/valencia.png', 'val');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de la taula `items`
 --
 
 CREATE TABLE IF NOT EXISTS `items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `descripcio` varchar(128) NOT NULL,
+  `estat` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Bolcant dades de la taula `items`
+--
+
+INSERT INTO `items` (`id`, `descripcio`, `estat`) VALUES
+(0, 'Ítem 1', 0),
+(1, 'Ítem 2', 0),
+(2, 'Ítem 3', 0),
+(3, 'Ítem 4', 0),
+(4, 'Ítem 5', 0),
+(5, 'Ítem 6', 0);
 
 -- --------------------------------------------------------
 
@@ -234,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `plantilles_rol` (
   `camp` varchar(128) NOT NULL,
   `idorige` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=33 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 --
 -- Bolcant dades de la taula `plantilles_rol`
@@ -290,16 +325,19 @@ CREATE TABLE IF NOT EXISTS `respostes` (
   `resposta` varchar(1024) NOT NULL,
   `idusuari` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
 
 --
 -- Bolcant dades de la taula `respostes`
 --
 
 INSERT INTO `respostes` (`id`, `iditem_instancia`, `resposta`, `idusuari`) VALUES
-(10, 0, '0', 0),
-(11, 1, '0', 0),
-(12, 5, '0', 0);
+(13, 0, '1', 0),
+(14, 1, '0', 0),
+(15, 2, '1', 0),
+(16, 3, '0', 0),
+(17, 4, '1', 0),
+(18, 5, '0', 0);
 
 -- --------------------------------------------------------
 
@@ -347,8 +385,8 @@ INSERT INTO `usuaris` (`id`, `login`, `nom`, `password`, `estat`) VALUES
 (2, 'asdasd', 'asdasd', '123', 0),
 (3, 'asd', 'asd', '666', 0),
 (4, 'a', 'a', '666', 0),
-(5, 'b', 'b', '777', 0),
-(6, 'pepet2', 'Pepet', '202cb962ac59075b964b07152d234b70', -1);
+(5, 'b', 'b', '777', -1),
+(6, 'pepet2', 'Pepet', '202cb962ac59075b964b07152d234b70', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
