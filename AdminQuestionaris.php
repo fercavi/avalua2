@@ -138,9 +138,9 @@
         tancarSessio = "<a href='index.php?action=tancarSessio'><?php echo $lang["TANCARSESSIO"]?></a>";        
         var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["NOM"]?></th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
         for(var i=0;i<questionaris.length;i++){
-         html+= "<tr><td>"+questionaris[i].id + "</td><td>"+questionaris[i].nom + "</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarQuestionari("+questionaris[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-user' style='cursor: pointer;' onclick='modificarQuestionari("+questionaris[i].id+")'>&nbsp;</div>";
+         html+= "<tr><td>"+questionaris[i].id + "</td><td>"+questionaris[i].nom + "</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarQuestionari("+questionaris[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-user' style='cursor: pointer;' onclick='modificarQuestionari("+questionaris[i].id+")'></div>";
           for(var j=0;j<idiomes.length;j++){
-            html+="<img src='"+idiomes[j].flag+"' onclick='modificaIdioma("+questionaris[i].id+","+idiomes[j].id+")' style='cursor: pointer;' ></img>"
+            html+="&nbsp;<img src='"+idiomes[j].flag+"' onclick='modificaIdioma("+questionaris[i].id+","+idiomes[j].id+")' style='cursor: pointer;' ></img>"
           }
          html +="</td></tr>";
         }

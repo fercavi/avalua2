@@ -80,7 +80,7 @@ class LoaderDBAMysql{
     //TODO: falta enllaçar correctament els items amb els permisos i estímuls
     $queryEnunciat =  "select IE.iditem,IE.id,C.text as enunciat,P.lectura,P.escriptura from cadenes C, item_instancia IE,estimul_instancia EQ, permisos P ";
     $queryEnunciat .= " where P.idusuari=".$this->uid." and P.camp='items' and P.idorige=IE.id and IE.idestimul_instancia=EQ.id AND ";
-    $queryEnunciat .= " EQ.id=$idEstimulInstancia and C.idioma='".$this->idioma."' and C.taulaorige='Items' and C.camporige='enunciat' and C.idorige=IE.iditem";    
+    $queryEnunciat .= " EQ.id=$idEstimulInstancia and C.idioma='".$this->idioma."' and C.taulaorige='items' and C.camporige='enunciat' and C.idorige=IE.iditem";    
     $Items = array();
     $files=$PDOItems->query($queryEnunciat);
 		$fila=$files->fetch(PDO::FETCH_BOTH);		

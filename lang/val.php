@@ -25,6 +25,10 @@
   "ESTIMULS" => "Estímuls",
   "ITEMS" => "Ítems",
   "ENUNCIAT" => "Enunciat",
+  "ESTIMUL"=>"Estímul",
+  "TITOL"=>"Títol",
+  "OPCIONS"=>"Opcions",
+  "OPCIONSSEGONALINIA"=>"Una línia per opció"
  );
 
 ?>

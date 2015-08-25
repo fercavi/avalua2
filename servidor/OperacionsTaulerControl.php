@@ -116,7 +116,30 @@ require '../conf.php';
      $text = $_GET["text"];
      $result = setCadena($id,$taula,$camp,$idioma,$text);     
   }
-  
+  if ($accio=='getDadesEstimul'){
+    $id = $_GET["id"];
+    $idioma = $_GET["idioma"];
+    $result = getDadesEstimul($id,$idioma);
+  }
+  if  ($accio=='guardarDadesEstimul'){
+    $id = $_GET["id"];
+    $idioma = $_GET["idioma"];
+    $titol = $_GET["titol"];
+    $enunciat = $_GET["enunciat"];
+    $result = guardarDadesEstimul($id,$idioma,$enunciat,$titol);
+  }
+  if ($accio=='getDadesItem'){
+    $id = $_GET["id"];
+    $idioma = $_GET["idioma"];
+    $result = getDadesItem($id,$idioma);
+  }
+   if  ($accio=='guardarDadesItem'){
+    $id = $_GET["id"];
+    $idioma = $_GET["idioma"];
+    $opcions = $_GET["opcions"];
+    $enunciat = $_GET["enunciat"];
+    $result = guardarDadesItem($id,$idioma,$enunciat,$opcions);
+  }
   //actualitzem les dades
   $user->reloadData();
   $_SESSION["USUARI"] = $user;
@@ -407,16 +430,49 @@ require '../conf.php';
       $query = "select text from cadenes where idorige=$id and taulaorige='$taula' and camporige='$camp' and idioma=$idioma";      
       $files=$PDOCadena->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);
-      if ($fila) $cadena = $fila["text"];
+      if ($fila) $cadena = utf8_encode($fila["text"]);
       return $cadena;
   }
   function setCadena($id,$taula,$camp,$idioma,$text){   
-      global $connexio;
+      global $connexio;      
+      $text = utf8_decode($text);
+      //$text = str_replace("'",'&#8217;',$text);
+      $text = str_replace("'",'&apos;',$text);
 	    $PDOCadena = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
-      $query = "update cadenes set text='$text' where idorige=$id and taulaorige='$taula' and camporige='$camp' and idioma=$idioma";   
-      error_log($query);
+      $queryUpdate = "update cadenes set text='$text' where idorige=$id and taulaorige='$taula' and camporige='$camp' and idioma=$idioma";      
+      $queryInsert = "insert into cadenes (idorige,taulaorige,camporige,idioma,text) values ($id,'$taula','$camp',$idioma,'$text')";
+      $query = "Select count(*) as compte from cadenes where idorige=$id and taulaorige='$taula' and camporige='$camp' and idioma=$idioma";      
+      $files=$PDOCadena->query($query);
+		  $fila=$files->fetch(PDO::FETCH_BOTH);
+      $compte=$fila["compte"];
+      //Comprovem si existeix la cadena per insertar o fer update
+      //S'ha de fer la comprovació per que mysql torna 0 si fas un update amb els mateixos valors del camp. Així qeu replicaria registres'
+      $query = $queryUpdate;
+      if ($fila["compte"]==0) 
+        $query = $queryInsert;
       $sentencia = $PDOCadena->prepare($query);            
       $sentencia->execute();
+      
       return "OK";
+  }
+  function getDadesEstimul($id,$idioma){    
+      $enunciat = getCadena($id,'estimuls','enunciat',$idioma);
+      $titol = getCadena($id,'estimuls','titol',$idioma);
+      return array("ENUNCIAT"=>$enunciat,"TITOL"=>$titol);
+  }
+  function guardarDadesEstimul($id,$idioma,$enunciat,$titol){
+      setCadena($id,'estimuls','titol',$idioma,$titol);  
+      setCadena($id,'estimuls','enunciat',$idioma,$enunciat);     
+  }
+  function getOpcionsItem($idItem,$idioma){
+  return array();
+  }
+  function getDadesItem($id,$idioma){
+    $enunciat =getCadena($id,'items','enunciat',$idioma);    
+    return array ("ENUNCIAT"=>$enunciat,"OPCIONS"=>getOpcionsItem($id,$idioma));
+  }
+  function guardarDadesItem($id,$idioma,$enunciat,$opcions){
+     setCadena($id,'items','enunciat',$idioma,$enunciat);
+     return "OK";
   }
 ?>
