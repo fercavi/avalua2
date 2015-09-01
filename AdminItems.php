@@ -18,8 +18,18 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">   
     <script>  
       var Items=[];
+      var idiomaText = {
+        nom: "<?php echo $lang["NOM"]?>",        
+        opcions: "<?php echo $lang["OPCIONS"]?>",
+        opcio:"<?php echo $lang["OPCIO"]?>",
+        accions: "<?php echo $lang["ACCIONS"]?>",
+        ok: "<?php echo $lang["OK"]?>",
+        cancelar:"<?php echo $lang["CANCELAR"]?>",        
+        ordre:"<?php echo $lang["ORDRE"]?>",        
+        idiomes: <?php echo $idiomes ?>,
+      }
        var idiomes = <?php echo $idiomes ?>;
-     function eliminarEditorMCE(){
+     function eliminarEditorMCE(){        
         tinymce.editors=[];
       }
       function esborrarItem(id){
@@ -44,38 +54,35 @@
     			type:'GET',
     			data:'accio=getDadesItem&id='+idItem+"&idioma="+idIdioma,
     			success:function(result){
-            result = JSON.parse(result);
-            opcions = result.OPCIONS;
+            result = JSON.parse(result);            
             enunciat = result.ENUNCIAT;
             BootstrapDialog.show({
               title:'<?php echo $lang["ESTIMUL"]?>',
-              message:"<h3><?php echo $lang["ENUNCIAT"]?></h3><div id='contenedorEnunciat'></div><h3><?php echo $lang["OPCIONS"]?></h3><?php echo $lang["OPCIONSSEGONALINIA"]?><div id='contenedorOpcions'></div>",              
+              message:"<h3><?php echo $lang["ENUNCIAT"]?></h3><div id='contenedorEnunciat'></div>",
+              onhide: function() {
+                 eliminarEditorMCE();                 
+              },
               onshown: function(dialogItself){    
-                  $('#contenedorEnunciat').html("<textarea id='textAreaEnunciat'>"+decodeURIComponent(enunciat)+"</textarea>");
-                  $('#contenedorOpcions').html("<textarea id='textAreaOpcions'>"+decodeURIComponent(opcions)+"</textarea>");
-                  tinymce.init({selector: "#textAreaEnunciat",  entity_encoding : "raw" }); 
-                  tinymce.init({selector: "#textAreaOpcions",  entity_encoding : "raw" });                          
+                  $('#contenedorEnunciat').html("<textarea id='textAreaEnunciat'>"+decodeURIComponent(enunciat)+"</textarea>");                  
+                  tinymce.init({selector: "#textAreaEnunciat",  entity_encoding : "raw" });                   
                 },
               buttons:[
               {
                 label:'ok',
                 action: function(dialogItself){                      
-                      var enunciat=tinyMCE.editors[0].getContent({format : 'raw'});
-                      var opcions=tinyMCE.editors[1].getContent({format : 'raw'});
-                      enunciat = encodeURIComponent(enunciat);                      
-                      opcions = encodeURIComponent(opcions);                      
+                      var enunciat=tinyMCE.editors[0].getContent({format : 'raw'});                      
+                      enunciat = encodeURIComponent(enunciat);                                            
                       var peticio = {
                           url:'servidor/OperacionsTaulerControl.php',
                           type:'GET',
-                          data:'accio=guardarDadesItem&id='+idItem+'&idioma='+idIdioma + "&opcions="+JSON.stringify(opcions)+'&enunciat='+enunciat,
+                          data:'accio=guardarDadesItem&id='+idItem+'&idioma='+idIdioma +'&enunciat='+enunciat,
                           success:function(result){ 
                               
                           }               
                       }
                       $.ajax(peticio);
                       eliminarEditorMCE();
-                      dialogItself.close();
-                     
+                      dialogItself.close();                     
                       
                      }
             },
@@ -96,7 +103,8 @@
         tancarSessio = "<a href='index.php?action=tancarSessio'><?php echo $lang["TANCARSESSIO"]?></a>";        
         var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["NOM"]?></th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
         for(var i=0;i<Items.length;i++){
-         html+= "<tr><td>"+Items[i].id + "</td><td id='nom_"+Items[i].id+"'>"+Items[i].descripcio + "</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarItem("+Items[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-user' style='cursor: pointer;' onclick='modificarItem("+Items[i].id+")'></div>";
+         html+= "<tr><td>"+Items[i].id + "</td><td id='nom_"+Items[i].id+"'>"+Items[i].descripcio + "</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarItem("+Items[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-edit' style='cursor: pointer;' onclick='modificarItem("+Items[i].id+")'></div>";
+         html+="&nbsp;<div class='glyphicon glyphicon glyphicon-list-alt' style='cursor: pointer;' onclick='mostrarItem("+Items[i].tipus+","+Items[i].id+",idiomaText)'></div>"
          for(var j=0;j<idiomes.length;j++){
             html+="&nbsp;<img src='"+idiomes[j].flag+"' onclick='modificaIdioma("+Items[i].id+","+idiomes[j].id+")' style='cursor: pointer;' ></img>"
           }
@@ -184,5 +192,6 @@
  <script src="js/bootstrap.min.js"></script>
  <script src="js/bootstrap-dialog.js"></script>
  <script src="js/md5.js"></script>
+ <script src='js/mostrarItem.js'></script>
 </body>
 </html>

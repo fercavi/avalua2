@@ -28,7 +28,10 @@
   "ESTIMUL"=>"Estímul",
   "TITOL"=>"Títol",
   "OPCIONS"=>"Opcions",
-  "OPCIONSSEGONALINIA"=>"Una línia per opció"
+  "OPCIO"=>"Opció",
+  "OPCIONSSEGONALINIA"=>"Una línia per opció",
+  "OK"=>"Ok",
+  "ORDRE"=>"Ordre",
  );
 
 ?>

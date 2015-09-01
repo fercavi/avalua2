@@ -6,14 +6,19 @@
   	protected $Id;
     protected $actiu;
     protected $visible;
-  	function __construct($id,$enunciat,$preguntes,$respostes,$actiu=true,$visible=true){
+    protected $tipus=0;
+  	function __construct($id,$enunciat,$preguntes,$respostes,$tipus=0,$actiu=true,$visible=true){
   		$this->Enunciat=$enunciat;
   		$this->Preguntes=$preguntes;
   		$this->Respostes = $respostes;
   		$this->Id=$id;
       $this->actiu = $actiu;
       $this->visible=$visible;
+      $this->tipus=$tipus;
   	}
+    function getTipus(){
+      return $this->tipus;
+    }
   	function getRespostes(){
   		return $this->Respostes;
   	}

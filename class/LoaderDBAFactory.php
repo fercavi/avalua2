@@ -78,9 +78,9 @@ class LoaderDBAMysql{
     global $connexio;    
     $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );  
     //TODO: falta enllaçar correctament els items amb els permisos i estímuls
-    $queryEnunciat =  "select IE.iditem,IE.id,C.text as enunciat,P.lectura,P.escriptura from cadenes C, item_instancia IE,estimul_instancia EQ, permisos P ";
+    $queryEnunciat =  "select I.tipus,IE.iditem,IE.id,C.text as enunciat,P.lectura,P.escriptura from cadenes C, item_instancia IE,estimul_instancia EQ, permisos P,items I ";
     $queryEnunciat .= " where P.idusuari=".$this->uid." and P.camp='items' and P.idorige=IE.id and IE.idestimul_instancia=EQ.id AND ";
-    $queryEnunciat .= " EQ.id=$idEstimulInstancia and C.idioma='".$this->idioma."' and C.taulaorige='items' and C.camporige='enunciat' and C.idorige=IE.iditem";    
+    $queryEnunciat .= " EQ.id=$idEstimulInstancia and C.idioma='".$this->idioma."' and C.taulaorige='items' and C.camporige='enunciat' and C.idorige=IE.iditem AND I.id=IE.iditem";
     $Items = array();
     $files=$PDOItems->query($queryEnunciat);
 		$fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -93,7 +93,8 @@ class LoaderDBAMysql{
       $escriptura = false;
       if ($fila["escriptura"]=="1")
         $escriptura = true;
-      $Items[] = new ItemRadioButton($fila["id"],utf8_encode($fila["enunciat"]),$opcions,$respostes,$escriptura,$lectura);
+      if ($fila["tipus"]==1)
+        $Items[] = new ItemRadioButton($fila["id"],utf8_encode($fila["enunciat"]),$opcions,$respostes,$escriptura,$lectura);
       $fila=$files->fetch(PDO::FETCH_BOTH);	
     }
     //$Items[] = new ItemRadioButton(0,"<b>Pregunta0</b>",array("Opcio1","Opcio2"),array(0));

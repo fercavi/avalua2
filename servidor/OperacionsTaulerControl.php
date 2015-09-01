@@ -140,6 +140,26 @@ require '../conf.php';
     $enunciat = $_GET["enunciat"];
     $result = guardarDadesItem($id,$idioma,$enunciat,$opcions);
   }
+  if ($accio=='getOpcions'){
+    $id=$_GET["iditem"];
+    $result = getOpcions($id);
+  }
+  if ($accio=='getOpcioIdioma'){
+    $id=$_GET["id"];
+    $idioma=$_GET["idioma"];
+    $result=getOpcioIdioma($id,$idioma);
+  }
+  if ($accio=='canviarDescripcioOpcio'){
+    $idopcio=$_GET["id"];
+    $descripcio=$_GET["descripcio"];
+    $result=canviarDescripcioOpcio($idopcio,$descripcio);
+  }
+  if ($accio=='guardarIdiomaOpcio'){
+    $idOpcio= $_GET["id"];
+    $text = $_GET["opcio"];
+    $idioma=$_GET["idioma"];
+    $result = guardarIdiomaOpcio($idOpcio,$text,$idioma);
+  }
   //actualitzem les dades
   $user->reloadData();
   $_SESSION["USUARI"] = $user;
@@ -278,12 +298,12 @@ require '../conf.php';
   function getItemsEsborrats(){
    global $connexio;
       $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
-      $query = "select id,descripcio from items  where estat =-1";
+      $query = "select id,descripcio,tipus from items  where estat =-1";
       $files=$PDOItems->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
       $items=array();
       while($fila){
-        $items[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]));
+        $items[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]),"tipus"=>$fila["tipus"]);
         $fila=$files->fetch(PDO::FETCH_BOTH);		
       }
       return $items;  
@@ -384,12 +404,12 @@ require '../conf.php';
    function getItems(){
       global $connexio;
       $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
-      $query = "select id,descripcio from items where estat <>-1";
+      $query = "select id,descripcio,tipus from items where estat <>-1";
       $files=$PDOItems->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
       $Items=array();
       while($fila){
-        $Items[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]));
+        $Items[] = array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]),"tipus"=>$fila["tipus"]);
         $fila=$files->fetch(PDO::FETCH_BOTH);		
       }      
       return $Items;  
@@ -465,14 +485,64 @@ require '../conf.php';
       setCadena($id,'estimuls','enunciat',$idioma,$enunciat);     
   }
   function getOpcionsItem($idItem,$idioma){
-  return array();
+    global $connexio;
+    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+    $query = "select O.id,C.text,O.ordre from opcions O, cadenes C where iditem=$idItem and C.idorige=O.id and C.idioma=$idioma and C.taulaorige='opcions' and C.camporige='valor' order by ordre" ;    
+    $files=$PDOOpcions->query($query);
+		$fila=$files->fetch(PDO::FETCH_BOTH);    
+    $opcions = "";
+    while($fila){      
+      $opcions .=utf8_encode($fila["text"])."<br/>";
+      $fila=$files->fetch(PDO::FETCH_BOTH);
+    }
+    
+    return $opcions;
   }
   function getDadesItem($id,$idioma){
     $enunciat =getCadena($id,'items','enunciat',$idioma);    
-    return array ("ENUNCIAT"=>$enunciat,"OPCIONS"=>getOpcionsItem($id,$idioma));
+    return array ("ENUNCIAT"=>$enunciat);
   }
+
+  
   function guardarDadesItem($id,$idioma,$enunciat,$opcions){
-     setCadena($id,'items','enunciat',$idioma,$enunciat);
+     setCadena($id,'items','enunciat',$idioma,$enunciat);     
      return "OK";
+  }
+  function getOpcions($idItem){
+    global $connexio;
+    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+    $query = "select id,descripcio,ordre from opcions where iditem=$idItem";    
+    $files=$PDOOpcions->query($query);
+		$fila=$files->fetch(PDO::FETCH_BOTH);
+    $opcions = array();
+    while($fila){
+      $opcions[]=array("id"=>$fila["id"],"descripcio"=>utf8_encode($fila["descripcio"]),"ordre"=>$fila["ordre"]);
+      $fila=$files->fetch(PDO::FETCH_BOTH);
+    }
+    return $opcions;
+  }
+  function afegirOpcio($idItem,$descripcio,$ordre){
+    global $connexio;
+    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+    $query = "insert into opcions (iditem,descripcio,ordre) values($idItem,'$descripcio',$ordre)";
+    $sentencia = $PDOOpcions->prepare($query);            
+    $sentencia->execute();
+    $idinsert = $PDOOpcions->lastInsertId();
+    return array("ID"=>$idinsert);    
+  }
+  function canviarDescripcioOpcio($idopcio,$descripcio){
+    global $connexio;
+    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+    $query = "update opcions set descripcio='$descripcio' where id=$idopcio";
+    $sentencia = $PDOOpcions->prepare($query);            
+    $sentencia->execute();
+    return array("OK");
+  }
+  function getOpcioIdioma($idOpcio,$idIdioma){
+    return array ("OPCIO" =>getCadena($idOpcio,'opcions','valor',$idIdioma));
+  }
+  function guardarIdiomaOpcio($idOpcio,$text,$idioma){
+    setCadena($idOpcio,"opcions",'valor',$idioma,$text);
+    return array("OK");
   }
 ?>
