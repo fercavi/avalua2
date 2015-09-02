@@ -74,6 +74,32 @@ function canviaNomOpcionsRadioButton(id,nom){
       }  
   }
 }
+function puja(id1,ordre1,id2,ordre2){
+  var trobat = false;
+  for(i=0;(i<Opcions.length)&& !trobat;i++){
+    if (id1==Opcions[i].id){
+      Opcions.splice(i-1,2,Opcions[i],Opcions[i-1]);
+      Opcions[i].ordre=ordre2;
+      Opcions[i-1].ordre=ordre1;
+      html = mostraTaulaRadioButtonOpcions(-1,Idiomatext);
+      $('#contenedorOpcions').html(html);  
+      trobat=true;
+    }
+  }
+}
+function abaixa(id1,ordre1,id2,ordre2){
+  var trobat = false;
+  for(i=0;(i<Opcions.length)&& !trobat;i++){
+    if (id1==Opcions[i].id){
+      Opcions.splice(i,2,Opcions[i+1],Opcions[i]);
+      Opcions[i].ordre=ordre2;
+      Opcions[i+1].ordre=ordre1;
+      html = mostraTaulaRadioButtonOpcions(-1,Idiomatext);
+      $('#contenedorOpcions').html(html);  
+      trobat=true;
+    }
+  }
+}
 function modificarOpcioRadioButton(id,descripcio){
         BootstrapDialog.show({
             title:Idiomatext.nom+':',
@@ -108,12 +134,26 @@ function mostraTaulaRadioButtonOpcions(id,idiomatext){
     var ultimordre=0;
     Idiomatext=idiomatext;
     var html = "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th>"+idiomatext.nom+"</th><th>"+idiomatext.accions+"</th><th>"+idiomatext.ordre+"</th></tr></thead> ";
-    for(var i=0;i<Opcions.length;i++){
-       html+= "<tr><td>"+Opcions[i].id + "</td><td id='nomOpcio_"+Opcions[i].id+"'>"+Opcions[i].descripcio + "</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarOpcio("+Opcions[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-edit' style='cursor: pointer;' onclick='modificarOpcioRadioButton("+Opcions[i].id+",&apos;"+Opcions[i].descripcio+"&apos;)'></div>";
+    for(var i=0;i<Opcions.length;i++){       
+       var pintaAmunt="";
+       var pintaAvall="";
+       if(i<(Opcions.length-1)){
+          pintaAvall = "<div class='glyphicon glyphicon-arrow-down' style='cursor: pointer;' onclick='abaixa("+Opcions[i].id+","+Opcions[i+1].ordre + ","+Opcions[i+1].id + "," + Opcions[i].ordre+")'></div>";
+       }
+       else{
+          pintaAvall = "&nbsp;&nbsp;";
+       }
+       if (i!=0){
+          pintaAmunt = "<div class='glyphicon glyphicon-arrow-up' style='cursor: pointer;' onclick='puja("+Opcions[i].id+","+Opcions[i-1].ordre + ","+Opcions[i-1].id + "," + Opcions[i].ordre+")'></div>";
+       }
+       else{
+          pintaAmunt = "&nbsp;&nbsp;";     
+       }       
+       html+= "<tr><td>"+Opcions[i].id + "</td><td id='nomOpcio_"+Opcions[i].id+"'>"+Opcions[i].descripcio + "</td><td>"+pintaAmunt+"&nbsp;"+pintaAvall+"&nbsp;<div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarOpcio("+Opcions[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-edit' style='cursor: pointer;' onclick='modificarOpcioRadioButton("+Opcions[i].id+",&apos;"+Opcions[i].descripcio+"&apos;)'></div>";
        for(var j=0;j<idiomes.length;j++){
           html+="&nbsp;<img src='"+idiomes[j].flag+"' onclick='modificaIdiomaRadioButton("+Opcions[i].id+","+idiomes[j].id+")' style='cursor: pointer;' ></img>"
        }
-    html +=" </td><td>"+Opcions[i].ordre+"</td></tr>";    
+      html +=" </td><td>"+Opcions[i].ordre+"</td></tr>";    
      ultimordre=Opcions[i].ordre;
     }
     ultimordre++;

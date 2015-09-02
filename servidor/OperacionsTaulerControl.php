@@ -160,6 +160,13 @@ require '../conf.php';
     $idioma=$_GET["idioma"];
     $result = guardarIdiomaOpcio($idOpcio,$text,$idioma);
   }
+  if ($accio=='updateOrdresDosOpcions'){
+    $idopcio1=$_GET["id1"];
+    $idopcio2=$_GET["id2"];
+    $ordre1=$_GET["ordre1"];
+    $ordre2=$_GET["ordre2"];
+    $result = updateOrdresDosOpcions($idopcio1,$ordre1,$idopcio2,$ordre2);
+  }
   //actualitzem les dades
   $user->reloadData();
   $_SESSION["USUARI"] = $user;
@@ -544,5 +551,16 @@ require '../conf.php';
   function guardarIdiomaOpcio($idOpcio,$text,$idioma){
     setCadena($idOpcio,"opcions",'valor',$idioma,$text);
     return array("OK");
+  }
+  function updateOrdresDosOpcions($idopcio1,$ordre1,$idopcio2,$ordre2){
+    global $connexio;
+    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+    $query = "update opcions set ordre='$ordre1' where id=$idopcio1";
+    $sentencia = $PDOOpcions->prepare($query);            
+    $sentencia->execute();
+    $query = "update opcions set ordre='$ordre2' where id=$idopcio2";
+    $sentencia = $PDOOpcions->prepare($query);            
+    $sentencia->execute();
+    return array("OK");    
   }
 ?>
