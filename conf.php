@@ -7,6 +7,11 @@ function __autoload($class_name) {
 $loaderType = LoaderDBAFactory::LoaderDBAMysqlType;
 $saverType = SaverDBAFactory::SaverDBAMysqlType;
 
+//Operacions que fa el Servidor amb la BDA
+const DBAServerTypeMysql=0;
+$DBAServerType = DBAServerTypeMysql;
+
+
 require_once('lang/val.php');
 
 

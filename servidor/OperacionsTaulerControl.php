@@ -1,6 +1,14 @@
 <?php
 require '../conf.php';
-
+  function getPDO(){
+    $PDO = null;
+    global $DBAServerType;    
+    if ($DBAServerType==DBAServerTypeMysql){
+      global $connexio;
+      $PDO = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+    }
+    return $PDO;
+  }
   session_start();	
 	if (!isset($_SESSION["USUARI"])) die();    
 	$user=$_SESSION["USUARI"];
@@ -167,6 +175,36 @@ require '../conf.php';
     $ordre2=$_GET["ordre2"];
     $result = updateOrdresDosOpcions($idopcio1,$ordre1,$idopcio2,$ordre2);
   }
+  if ($accio=='afegirQuestionari'){
+    $nom=$_GET["nom"];
+    $result = afegirQuestionari($nom);
+  }
+  if ($accio=='afegirEstimul'){
+    $nom=$_GET["nom"];
+    $result = afegirEstimul($nom);
+  }
+  if ($accio=='getQuestionaris'){
+    $userLogin= $_GET["userLogin"];
+    $result=getQuestionaris($userLogin);
+  }
+  if ($accio=='afegirItem'){
+    $nom=$_GET["nom"];
+    $tipus = $_GET["tipus"];
+    $result = afegirItem($nom,$tipus);
+  }
+  if ($accio=='getEstimulsQuestionaris'){
+    $id=$_GET["id"];
+    $result = getEstimulsQuestionaris($id);
+  }
+  if ($accio=='esborrarAssignacioQuestionariEstimul'){
+    $id=$_GET["id"];
+    $result=esborrarAssignacioQuestionariEstimul($id);
+  }
+  if ($accio=='afegirAssignacioQuestionariEstimul'){
+    $idquestionari = $_GET["idquestionari"];
+    $idestimul = $_GET["idestimul"];
+    $result = afegirAssignacioQuestionariEstimul($idquestionari,$idestimul);
+  }
   //actualitzem les dades
   $user->reloadData();
   $_SESSION["USUARI"] = $user;
@@ -174,8 +212,7 @@ require '../conf.php';
   
   
   function llistatUsuaris(){
-    global $connexio;
-	  $PDOUsuaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+    $PDOUsuaris = getPDO();
 		$query = "select id, login, nom from usuaris where estat=0";
 		$files=$PDOUsuaris->query($query);
 		$fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -191,8 +228,7 @@ require '../conf.php';
     return $usuaris;
   }
   function creaUsuari($nom,$login,$pass){
-      global $connexio;
-	    $PDOUsuaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );      
+	    $PDOUsuaris = getPDO();
       $nom=utf8_encode($nom);
       $login=utf8_encode($login);
       $query = "insert into usuaris(login,nom,password) values('$login','$nom','$pass')";
@@ -200,17 +236,15 @@ require '../conf.php';
       $sentencia->execute();
       return array ("id"=>$PDOUsuaris->lastInsertId());
   }
-  function esborrarUsuari($id){
-      global $connexio;
-	    $PDOUsuaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function esborrarUsuari($id){      
+	    $PDOUsuaris = getPDO();
       $query = "update usuaris set estat=-1 where id=$id";      
       $sentencia = $PDOUsuaris->prepare($query);            
       $sentencia->execute();
       return array();
   }
-  function aplicarPlantillaRolUsuari($idplantilla,$idusuari){
-      global $connexio;
-      $PDOPlantilles = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function aplicarPlantillaRolUsuari($idplantilla,$idusuari){      
+      $PDOPlantilles = getPDO();
       $queryEsborrar ="delete from permisos where idusuari=$idusuari";
       $sentencia = $PDOPlantilles->prepare($queryEsborrar);            
       $sentencia->execute();      
@@ -220,9 +254,8 @@ require '../conf.php';
       return "OK";
       
   }
-  function getRols(){
-      global $connexio;
-      $PDORols = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function getRols(){      
+      $PDORols = getPDO();
       $query = "select id,descripcio from rols where estat <>-1";
       $files=$PDORols->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -234,34 +267,30 @@ require '../conf.php';
       return $rols;
   
   }
-  function esborrarRol($id){
-      global $connexio;
-	    $PDORol = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function esborrarRol($id){      
+	    $PDORol = getPDO();
       $query = "update rols set estat=-1 where id=$id";      
       $sentencia = $PDORol->prepare($query);            
       $sentencia->execute();
       return "OK";
   }
-  function canviarNomRol($id,$nom){
-      global $connexio;
-	    $PDORol = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function canviarNomRol($id,$nom){      
+	    $PDORol = getPDO();
       $nom=utf8_encode($nom);
       $query = "update rols set descripcio='$nom' where id=$id";      
       $sentencia = $PDORol->prepare($query);            
       $sentencia->execute();
       return "OK";    
   }
-  function recuperarDeTaula($id,$taula){
-      global $connexio;      
+  function recuperarDeTaula($id,$taula){      
 	    $PDOTaula = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
       $query = "update $taula set estat=0 where id=$id";      
       $sentencia = $PDOTaula->prepare($query);            
       $sentencia->execute();
       return "OK";
   }
-  function getUsuarisEsborrats(){   
-    global $connexio;
-	  $PDOUsuaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+  function getUsuarisEsborrats(){       
+	  $PDOUsuaris = getPDO();
 		$query = "select id, login, nom from usuaris where estat=-1";
 		$files=$PDOUsuaris->query($query);
 		$fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -276,9 +305,8 @@ require '../conf.php';
     }    
     return $usuaris;
   }
-  function getRolsEsborrats(){
-      global $connexio;
-      $PDORols = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function getRolsEsborrats(){      
+      $PDORols = getPDO();
       $query = "select id,descripcio from rols where estat =-1";
       $files=$PDORols->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -289,9 +317,8 @@ require '../conf.php';
       }
       return $rols;  
   }
-  function getEstimulsEsborrats(){
-   global $connexio;
-      $PDOEstimuls = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function getEstimulsEsborrats(){   
+      $PDOEstimuls = getPDO();
       $query = "select id,descripcio from estimuls  where estat =-1";
       $files=$PDOEstimuls->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -302,9 +329,8 @@ require '../conf.php';
       }
       return $estimuls;  
   }
-  function getItemsEsborrats(){
-   global $connexio;
-      $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function getItemsEsborrats(){   
+      $PDOItems = getPDO();
       $query = "select id,descripcio,tipus from items  where estat =-1";
       $files=$PDOItems->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -325,9 +351,8 @@ require '../conf.php';
     );
     return $result;
   }
-  function getPermisosRol($id){
-      global $connexio;
-      $PDOPermisos = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function getPermisosRol($id){      
+      $PDOPermisos = getPDO();
       $query = "select id,lectura,escriptura,camp,idorige,idrol from plantilles_rol where idrol =$id";
       $files=$PDOPermisos->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -338,42 +363,37 @@ require '../conf.php';
       }
       return $permisos;    
   }
-  function canviarPermisRol($id,$lectura,$escriptura){
-      global $connexio;
-	    $PDOPermisos = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+  function canviarPermisRol($id,$lectura,$escriptura){      
+	    $PDOPermisos = getPDO();
       $query = "update plantilles_rol set lectura=$lectura, escriptura=$escriptura where id=$id";      
       $sentencia = $PDOPermisos->prepare($query);            
       $sentencia->execute();
       return "OK";    
   }
-  function insertNouPermisRol($idrol,$lectura,$escriptura,$camp,$idorige){
-      global $connexio;
-	    $PDOPermisos = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                            
+  function insertNouPermisRol($idrol,$lectura,$escriptura,$camp,$idorige){      
+	    $PDOPermisos = getPDO();
       $query = "insert into plantilles_rol(idrol,lectura,escriptura,camp,idorige) values($idrol,$lectura,$escriptura,'$camp',$idorige)";
       $sentencia = $PDOPermisos->prepare($query);            
       $sentencia->execute();
       $result = array("id"=>$PDOPermisos->lastInsertId());
       return $result;
   }
-  function eliminaPermisRol($id){
-      global $connexio;
-	    $PDOEliminaPermis = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+  function eliminaPermisRol($id){      
+	    $PDOEliminaPermis = getPDO();
       $query = "delete from plantilles_rol where id=$id";      
       $sentencia = $PDOEliminaPermis->prepare($query);            
       $sentencia->execute();
       return "OK";    
   }
-  function eliminarQuestionari($id){
-      global $connexio;
-	    $PDOQuestionari = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+  function eliminarQuestionari($id){      
+	    $PDOQuestionari = getPDO();
       $query = "update questionaris set estat=-1 where id=$id";      
       $sentencia = $PDOQuestionari->prepare($query);            
       $sentencia->execute();
       return "OK";    
   }
-  function getQuestionarisEsborrats(){
-      global $connexio;
-      $PDOQuestionaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function getQuestionarisEsborrats(){      
+      $PDOQuestionaris = getPDO();
       $query = "select id,descripcio from questionaris where estat =-1";
       $files=$PDOQuestionaris->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -384,33 +404,29 @@ require '../conf.php';
       }
       return $questionaris;  
   }
-  function canviaNomQuestionari($id,$nom){
-      global $connexio;
-	    $PDOQuestionari = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+  function canviaNomQuestionari($id,$nom){      
+	    $PDOQuestionari = getPDO();
       $query = "update questionaris set descripcio='$nom' where id=$id";      
       $sentencia = $PDOQuestionari->prepare($query);            
       $sentencia->execute();
       return "OK";    
   }
-   function canviaNomEstimul($id,$nom){
-      global $connexio;
-	    $PDOEstimul = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+   function canviaNomEstimul($id,$nom){      
+	    $PDOEstimul =  getPDO();
       $query = "update estimuls set descripcio='$nom' where id=$id";      
       $sentencia = $PDOEstimul->prepare($query);            
       $sentencia->execute();
       return "OK";    
   }
-   function canviaNomItem($id,$nom){
-      global $connexio;
-	    $PDOItem = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+   function canviaNomItem($id,$nom){      
+	    $PDOItem =  getPDO();
       $query = "update items  set descripcio='$nom' where id=$id";      
       $sentencia = $PDOItem->prepare($query);            
       $sentencia->execute();
       return "OK";    
   }
-   function getItems(){
-      global $connexio;
-      $PDOItems = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+   function getItems(){      
+      $PDOItems =  getPDO();
       $query = "select id,descripcio,tipus from items where estat <>-1";
       $files=$PDOItems->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -421,9 +437,8 @@ require '../conf.php';
       }      
       return $Items;  
   }
-  function getEstimuls(){
-      global $connexio;
-      $PDOEstimuls = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );            
+  function getEstimuls(){      
+      $PDOEstimuls =  getPDO();
       $query = "select id,descripcio from estimuls where estat <>-1";
       $files=$PDOEstimuls->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);		
@@ -442,30 +457,26 @@ require '../conf.php';
       $sentencia->execute();
       return "OK";    
   }
-    function esborrarItem($id){
-      global $connexio;
-	    $PDOItem = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+    function esborrarItem($id){      
+	    $PDOItem =  getPDO();
       $query = "update items set estat = -1 where id=$id";                
       $sentencia = $PDOItem->prepare($query);            
       $sentencia->execute();
       return "OK";    
   }
   function getCadena($id,$taula,$camp,$idioma){
-      $cadena = '';
-      global $connexio;
-	    $PDOCadena = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+      $cadena = '';      
+	    $PDOCadena =  getPDO();
       $query = "select text from cadenes where idorige=$id and taulaorige='$taula' and camporige='$camp' and idioma=$idioma";      
       $files=$PDOCadena->query($query);
 		  $fila=$files->fetch(PDO::FETCH_BOTH);
       if ($fila) $cadena = utf8_encode($fila["text"]);
       return $cadena;
   }
-  function setCadena($id,$taula,$camp,$idioma,$text){   
-      global $connexio;      
-      $text = utf8_decode($text);
-      //$text = str_replace("'",'&#8217;',$text);
+  function setCadena($id,$taula,$camp,$idioma,$text){         
+      $text = utf8_decode($text);      
       $text = str_replace("'",'&apos;',$text);
-	    $PDOCadena = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );                        
+	    $PDOCadena =  getPDO();
       $queryUpdate = "update cadenes set text='$text' where idorige=$id and taulaorige='$taula' and camporige='$camp' and idioma=$idioma";      
       $queryInsert = "insert into cadenes (idorige,taulaorige,camporige,idioma,text) values ($id,'$taula','$camp',$idioma,'$text')";
       $query = "Select count(*) as compte from cadenes where idorige=$id and taulaorige='$taula' and camporige='$camp' and idioma=$idioma";      
@@ -491,9 +502,8 @@ require '../conf.php';
       setCadena($id,'estimuls','titol',$idioma,$titol);  
       setCadena($id,'estimuls','enunciat',$idioma,$enunciat);     
   }
-  function getOpcionsItem($idItem,$idioma){
-    global $connexio;
-    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+  function getOpcionsItem($idItem,$idioma){    
+    $PDOOpcions =  getPDO();
     $query = "select O.id,C.text,O.ordre from opcions O, cadenes C where iditem=$idItem and C.idorige=O.id and C.idioma=$idioma and C.taulaorige='opcions' and C.camporige='valor' order by ordre" ;    
     $files=$PDOOpcions->query($query);
 		$fila=$files->fetch(PDO::FETCH_BOTH);    
@@ -515,9 +525,8 @@ require '../conf.php';
      setCadena($id,'items','enunciat',$idioma,$enunciat);     
      return "OK";
   }
-  function getOpcions($idItem){
-    global $connexio;
-    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+  function getOpcions($idItem){    
+    $PDOOpcions =  getPDO();
     $query = "select id,descripcio,ordre from opcions where iditem=$idItem";    
     $files=$PDOOpcions->query($query);
 		$fila=$files->fetch(PDO::FETCH_BOTH);
@@ -528,18 +537,16 @@ require '../conf.php';
     }
     return $opcions;
   }
-  function afegirOpcio($idItem,$descripcio,$ordre){
-    global $connexio;
-    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+  function afegirOpcio($idItem,$descripcio,$ordre){    
+    $PDOOpcions =  getPDO();
     $query = "insert into opcions (iditem,descripcio,ordre) values($idItem,'$descripcio',$ordre)";
     $sentencia = $PDOOpcions->prepare($query);            
     $sentencia->execute();
     $idinsert = $PDOOpcions->lastInsertId();
     return array("ID"=>$idinsert);    
   }
-  function canviarDescripcioOpcio($idopcio,$descripcio){
-    global $connexio;
-    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+  function canviarDescripcioOpcio($idopcio,$descripcio){    
+    $PDOOpcions =  getPDO();
     $query = "update opcions set descripcio='$descripcio' where id=$idopcio";
     $sentencia = $PDOOpcions->prepare($query);            
     $sentencia->execute();
@@ -552,9 +559,8 @@ require '../conf.php';
     setCadena($idOpcio,"opcions",'valor',$idioma,$text);
     return array("OK");
   }
-  function updateOrdresDosOpcions($idopcio1,$ordre1,$idopcio2,$ordre2){
-    global $connexio;
-    $PDOOpcions = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+  function updateOrdresDosOpcions($idopcio1,$ordre1,$idopcio2,$ordre2){    
+    $PDOOpcions =  getPDO();
     $query = "update opcions set ordre='$ordre1' where id=$idopcio1";
     $sentencia = $PDOOpcions->prepare($query);            
     $sentencia->execute();
@@ -562,5 +568,75 @@ require '../conf.php';
     $sentencia = $PDOOpcions->prepare($query);            
     $sentencia->execute();
     return array("OK");    
+  }
+  function getQuestionaris($userlogin){    
+    $PDOQuestionaris =  getPDO();
+    $query = $query = "select Q.id,Q.descripcio from  permisos P, usuaris U, questionaris Q  where P.lectura=1 and U.login='$userlogin' and U.id=P.idusuari and P.camp='questionaris' and P.idorige=Q.id AND Q.estat<>-1";		            
+    $sentencia = $PDOQuestionaris->prepare($query);
+    $questionaris = array();
+    $files=$PDOQuestionaris->query($query);
+		$fila=$files->fetch(PDO::FETCH_BOTH);
+    while($fila){
+      $questionaris[]=array("id"=>$fila["id"],"nom"=>utf8_encode($fila["descripcio"]),);
+      $fila=$files->fetch(PDO::FETCH_BOTH);      
+    }
+    return $questionaris;
+  }
+  function afegirQuestionari($nom){    
+    $PDOQuestionari =  getPDO();
+    $query = utf8_decode("insert into questionaris (descripcio) values ('$nom')");        
+    $sentencia = $PDOQuestionari->prepare($query);            
+    $sentencia->execute();
+    $idinsert = $PDOQuestionari->lastInsertId();
+    return array("ID"=>$idinsert);    
+  }
+  function afegirEstimul($nom){    
+    $PDOEstimul =  getPDO();
+    $query = utf8_decode("insert into estimuls (descripcio) values ('$nom')");    
+    $sentencia = $PDOEstimul->prepare($query);            
+    $sentencia->execute();
+    $idinsert = $PDOEstimul->lastInsertId();
+    return array("ID"=>$idinsert);    
+  }
+  function afegirItem($nom,$tipus){
+    $PDOItem =  getPDO();
+    $query = utf8_decode("insert into items (descripcio,tipus) values ('$nom',$tipus)");    
+    $sentencia = $PDOItem->prepare($query);            
+    $sentencia->execute();
+    $idinsert = $PDOItem->lastInsertId();
+    return array("ID"=>$idinsert);    
+  }
+  function getEstimulsQuestionaris($idQuestionari){
+    $PDOEstimuls = getPDO();
+    $query = "select EI.id,EI.idestimul,E.descripcio as estimul_descripcio,EI.idquestionari,Q.descripcio as questionari_descripcio from estimul_instancia EI, estimuls E, questionaris Q Where ";
+    $query .= " Q.id=EI.idquestionari AND E.id=EI.idestimul and Q.id=$idQuestionari and E.estat<>-1";
+    $estimuls = array();
+    $files=$PDOEstimuls->query($query);
+		$fila=$files->fetch(PDO::FETCH_BOTH);
+    while($fila){
+      $estimuls[]=array(
+                  "id"=>$fila["id"],
+                  "idestimul"=>$fila["idestimul"],
+                  "idquestionari"=>$fila["idquestionari"],
+                  "questionari_descripcio"=>utf8_encode($fila["questionari_descripcio"]),
+                  "estimul_descripcio"=>utf8_encode($fila["estimul_descripcio"]),);
+      $fila=$files->fetch(PDO::FETCH_BOTH);      
+    }
+    return $estimuls;
+  }
+  function esborrarAssignacioQuestionariEstimul($id){
+      $PDOEstimul = getPDO();
+      $queryEsborrar ="delete from estimul_instancia where id=$id";
+      $sentencia = $PDOEstimul->prepare($queryEsborrar);            
+      $sentencia->execute();      
+      return "OK";
+  }
+  function afegirAssignacioQuestionariEstimul($idQuestionari,$idEstimul){
+    $PDOEstimuls = getPDO();
+    $query = "insert into estimul_instancia(idestimul,idquestionari) values ($idEstimul,$idQuestionari)";
+    $sentencia = $PDOEstimuls->prepare($query);            
+    $sentencia->execute();
+    $idinsert = $PDOEstimuls->lastInsertId();
+    return array("ID"=>$idinsert);    
   }
 ?>

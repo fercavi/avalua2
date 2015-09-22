@@ -25,7 +25,7 @@ class Usuari{
     $this->esAdmin = $dades["ADMINISTRADOR"];
 		//$this->loadDataFromDBA();
 		$_SESSION["USUARI"]= $this;    
-	}
+	}  
   public function reloadData(){
   
  		global $loaderType;
@@ -103,6 +103,9 @@ class Usuari{
 	}
   public function esAdmin(){
     return $this->esAdmin;
+  }
+  public function getLogin(){
+    return $this->username;
   }
 }
 

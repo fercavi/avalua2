@@ -29,14 +29,21 @@ class LoaderDBAMysql{
 	function loadQuestionaris($userlogin){
 		global $connexio;
 	  $PDOQuestionaris = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
-		$query = "select U.id as uid,C.text,Q.id from questionaris Q, permisos P, usuaris U,cadenes C where P.lectura=1 and U.login='$userlogin' and U.id=P.idusuari and P.camp='questionaris' and P.idorige=Q.id And C.idorige=Q.id and C.taulaorige='questionaris' and C.camporige='nom' and C.idioma='".$this->idioma."' AND Q.estat<>-1";		    
+    $PDO2 = new PDO('mysql:host='.$connexio["SERVIDOR"].';dbname='.$connexio["DBA"], $connexio["USER"], $connexio["PASSWORD"] );
+		$query = "select U.id as uid,Q.id,Q.descripcio from  permisos P, usuaris U, questionaris Q  where P.lectura=1 and U.login='$userlogin' and U.id=P.idusuari and P.camp='questionaris' and P.idorige=Q.id AND Q.estat<>-1";		        
 		$files=$PDOQuestionaris->query($query);
 		$fila=$files->fetch(PDO::FETCH_BOTH);		
 		$questionaris = array();
     $this->uid=$fila["uid"];
 		while ($fila){
 			$idquestionari=$fila["id"];
-			$questionaris[]= $this->crearQuestionari($idquestionari,$fila["text"]);
+      $nomQuestionari = $fila["descripcio"];
+      $query = "select C.text from cadenes C where C.idorige=$idquestionari and C.taulaorige='questionaris' and C.camporige='nom' and C.idioma=".$this->idioma;        
+      $files2=$PDO2->query($query);
+      $fila2=$files2->fetch(PDO::FETCH_BOTH);
+      if ($fila2) //si existeix traducció posem el text, si no la descripció de la taula questionaris
+        $nomQuestionari = $fila2["text"];
+			$questionaris[]= $this->crearQuestionari($idquestionari,$nomQuestionari);
 			$fila=$files->fetch(PDO::FETCH_BOTH);
 		}
 		return $questionaris;

@@ -32,6 +32,27 @@
      function eliminarEditorMCE(){        
         tinymce.editors=[];
       }
+      function afegirItem(){      
+        var nom=$('#NomNou').val();
+        var tipus=1;
+        var peticio = {
+    			url:'servidor/OperacionsTaulerControl.php',
+    			type:'GET',
+    			data:'accio=afegirItem&nom='+nom+"&tipus="+tipus,
+    			success:function(result){
+            result = JSON.parse(result);
+            id = result.ID;
+            I = {
+              id: id,
+              descripcio:nom,
+            }            
+            Items.push(I);
+            mostraTaula();
+          }
+        }
+        $.ajax(peticio);
+      }
+      
       function esborrarItem(id){
         esborrat = false;
         for(var i=0;(i<Items.length) && (!esborrat);i++){
@@ -111,8 +132,8 @@
 
          html +=" </td></tr>";
         }
-      
-         html +="</table>";
+        html +="<tr><td>&nbsp;</td><td><input type='text' id='NomNou'></td><td><div class='glyphicon glyphicon-plus' style='cursor: pointer;' onclick='afegirItem()'></div></td></tr>"
+        html +="</table>";
         
          $(".container").html(tornar+html+tancarSessio);
 

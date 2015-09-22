@@ -22,6 +22,25 @@
       function eliminarEditorMCE(){
         tinymce.editors=[];
       }
+      function afegirEstimul(){
+        var nom=$('#NomNou').val();
+        var peticio = {
+    			url:'servidor/OperacionsTaulerControl.php',
+    			type:'GET',
+    			data:'accio=afegirEstimul&nom='+nom,
+    			success:function(result){
+            result = JSON.parse(result);
+            id = result.ID;
+            E = {
+              id: id,
+              descripcio:nom,
+            }            
+            Estimuls.push(E);
+            mostraTaula();
+          }
+        }
+        $.ajax(peticio);
+      }
       function esborrarEstimul(id){
         esborrat = false;
         for(var i=0;(i<Estimuls.length) && (!esborrat);i++){
@@ -99,11 +118,10 @@
           html+= "<tr><td>"+Estimuls[i].id + "</td><td id='nom_"+Estimuls[i].id+"'>"+Estimuls[i].descripcio + "</td><td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarEstimul("+Estimuls[i].id+")'></div>&nbsp;<div class='glyphicon glyphicon-user' style='cursor: pointer;' onclick='modificarEstimul("+Estimuls[i].id+")'></div> ";
           for(var j=0;j<idiomes.length;j++){
             html+="&nbsp;<img src='"+idiomes[j].flag+"' onclick='modificaIdioma("+Estimuls[i].id+","+idiomes[j].id+")' style='cursor: pointer;' ></img>"
-          }
-
+          }  
          html+="</td></tr>";
         }
-      
+         html +="<tr><td>&nbsp;</td><td><input type='text' id='NomNou'></td><td><div class='glyphicon glyphicon-plus' style='cursor: pointer;' onclick='afegirEstimul()'></div></td></tr>"
          html +="</table>";
         
          $(".container").html(tornar+html+tancarSessio);
@@ -150,7 +168,7 @@
             {
               label:'ok',
               action: function(dialogItself){
-                      nom = $('#nouNom').val();
+                      nom = $('#NouNom').val();
                       var peticio = {
                           url:'servidor/OperacionsTaulerControl.php',
                           type:'GET',

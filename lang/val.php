@@ -32,6 +32,9 @@
   "OPCIONSSEGONALINIA"=>"Una línia per opció",
   "OK"=>"Ok",
   "ORDRE"=>"Ordre",
+  "IDESTIMUL"=>"Id estímul",
+  "DESCRIPCIOESTIMUL"=>"Descripció estímul",
+  "BUSCADOR"=>"BUSCADOR",
  );
 
 ?>
