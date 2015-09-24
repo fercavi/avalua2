@@ -107,6 +107,9 @@ class Usuari{
   public function getLogin(){
     return $this->username;
   }
+  public function getIdioma(){
+    return $this->idioma;
+  }
 }
 
 ?>

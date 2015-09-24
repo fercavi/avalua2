@@ -196,6 +196,10 @@ require '../conf.php';
     $id=$_GET["id"];
     $result = getEstimulsQuestionaris($id);
   }
+  if ($accio=='getItemsEstimul'){
+    $id=$_GET["id"];
+    $result = getItemsEstimul($id);
+  }
   if ($accio=='esborrarAssignacioQuestionariEstimul'){
     $id=$_GET["id"];
     $result=esborrarAssignacioQuestionariEstimul($id);
@@ -204,6 +208,16 @@ require '../conf.php';
     $idquestionari = $_GET["idquestionari"];
     $idestimul = $_GET["idestimul"];
     $result = afegirAssignacioQuestionariEstimul($idquestionari,$idestimul);
+  }
+  if ($accio=='getHtmlItem'){
+    $id=$_GET["id"];
+    $idioma = $_GET["idioma"];
+    $result = getHtmlItem($id,$idioma);
+  }
+  if ($accio == 'getHTMLEstimul'){
+    $id=$_GET["id"];
+    $idioma=$_GET["idioma"];
+    $result = getHTMLEstimul($id,$idioma);
   }
   //actualitzem les dades
   $user->reloadData();
@@ -638,5 +652,75 @@ require '../conf.php';
     $sentencia->execute();
     $idinsert = $PDOEstimuls->lastInsertId();
     return array("ID"=>$idinsert);    
+  }
+  function afegirAssignacioEstimulItem($idEstimul,$idItem){
+    $PDOItems = getPDO();
+    $query = "insert into item_instancia(idestimul,idquestionari) values ($idEstimul,$idQuestionari)";
+    //$sentencia = $PDOEstimuls->prepare($query);            
+    $sentencia->execute();
+    //                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 $idinsert = $PDOEstimuls->lastInsertId();
+    return array("ID"=>$idinsert);    
+  }
+  function getItemsEstimul($id){
+    $PDOItems = getPDO();
+    $query = "select II.id,II.idestimul_instancia,II.iditem,I.descripcio as item_descripcio from item_instancia II, items I, estimul_instancia EI  Where ";
+    $query .= "EI.idestimul=$id and EI.id=II.idestimul_instancia and II.iditem=I.id and I.estat <>-1 ";    
+    $items = array();
+    $files=$PDOItems->query($query);
+    
+		$fila=$files->fetch(PDO::FETCH_BOTH);
+    while($fila){
+      $items[]=array(
+                  "id"=>$fila["id"],
+                  "idestimul_instancia"=>$fila["idestimul_instancia"],
+                  "iditem"=>$fila["iditem"],
+                  "item_descripcio"=>utf8_encode($fila["item_descripcio"]),);
+      $fila=$files->fetch(PDO::FETCH_BOTH);      
+    }
+    return $items;
+
+  }
+    function getHTMLEstimul($idEstimul,$idioma){
+      $PDOEnunciat = getPDO();
+      $query = "select iditem from item_instancia II, estimul_instancia EI where EI.idestimul=$idEstimul and EI.id=II.idestimul_instancia";
+      $PDOEnunciat->query($query);
+      $files=$PDOEnunciat->query($query);
+      $fila=$files->fetch(PDO::FETCH_BOTH);
+      
+      $titol = getCadena($idEstimul,'estimuls','titol',$idioma);
+      $enunciat = getCadena($idEstimul,'estimuls','enunciat',$idioma);
+      
+      $html = "<div  name='Estimul_".$idEstimul."'><h3>".$titol."</h3><p>".$enunciat."</p>";
+      while($fila){
+        $html.= getHtmlItem($fila["iditem"],$idioma);
+        $fila=$files->fetch(PDO::FETCH_BOTH);
+      }
+      $html .='</div>';      
+      return $html;
+  }
+  function getOpcionsClasseItem($idItem,$idioma){     
+     $PDOItems = getPDO();
+     $query = "select C.text from cadenes C,opcions O where C.idorige=O.id and O.iditem=$idItem and C.taulaorige='opcions' and C.camporige='valor' and C.idioma='".$idioma ."' order by ordre";     
+     $files=$PDOItems->query($query);
+		 $fila=$files->fetch(PDO::FETCH_BOTH);		
+     $result = array();
+     while($fila){
+      $result[] = utf8_encode($fila["text"]);
+      $fila=$files->fetch(PDO::FETCH_BOTH);		
+     }     
+     return $result;
+  }
+  function getHtmlItem($idItem,$idioma){
+    $PDOItem = getPDO();
+    $opcions =getOpcionsClasseItem($idItem,$idioma);
+    $respostes = array();
+    $escriptura = true;
+    $lectura = true;
+    $queryEnunciat =  "select I.id,I.tipus,C.text as enunciat from cadenes C,items I ";    
+    $queryEnunciat .= "  where C.idioma='".$idioma."' and C.taulaorige='items' and C.camporige='enunciat' and C.idorige=$idItem AND I.id=$idItem";    
+    $files=$PDOItem->query($queryEnunciat);
+    $fila=$files->fetch(PDO::FETCH_BOTH);		    
+    $Item = new ItemRadioButton($fila["id"],utf8_encode($fila["enunciat"]),$opcions,$respostes,$escriptura,$lectura);
+    return $Item->generateHTML();    
   }
 ?>

@@ -35,6 +35,9 @@
   "IDESTIMUL"=>"Id estímul",
   "DESCRIPCIOESTIMUL"=>"Descripció estímul",
   "BUSCADOR"=>"BUSCADOR",
+  "IDITEM"=>"Id ítem",
+  "DESCRIPCIOITEM"=>"Descripció ítem",
+
  );
 
 ?>

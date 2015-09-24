@@ -16,10 +16,34 @@
 ?>    
      var idiomes = <?php echo $idiomes ?>; 
      var assignacioEstimuls=[];
+     var idioma = <?php echo $user->getIdioma(); ?>;
      var Estimuls;
      function eliminarEditorMCE(){
         tinymce.editors=[];
      }
+    function veureEstimul(idEstimul){
+        var peticio = {
+    			url:'servidor/OperacionsTaulerControl.php',
+    			type:'GET',
+    			data:'accio=getHTMLEstimul&id='+idEstimul+"&idioma="+idioma,
+    			success:function(result){
+           html = JSON.parse(result);
+           BootstrapDialog.show({
+            title:'',
+            message:html,
+            buttons:[
+            {
+              label:'ok',
+              action: function(dialogItself){                      
+                      dialogItself.close();
+                     }
+            }]
+              });
+          }
+        }
+        $.ajax(peticio);
+      }
+
       function afegirQuestionari(){
         var nom=$('#NomNou').val();
         var peticio = {
@@ -142,7 +166,7 @@
           });
 
       }
-      function buscaEstimul(){
+      function buscaEstimul(idquestionari){
         var filtre =$('#filtreEstimul').val();
         var estimulsFiltrats = [];        
         if (filtre=="")
@@ -154,7 +178,7 @@
             }
           }
         }
-        html=creaTaulaBuscadorEstimuls(estimulsFiltrats);        
+        html=creaTaulaBuscadorEstimuls(idquestionari,estimulsFiltrats);        
         $('#contenedorBuscador').html(html);
         
       }
@@ -180,9 +204,9 @@
       function creaTaulaBuscadorEstimuls(idQuestionari,estimuls){
         var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th><?php echo $lang["IDESTIMUL"]?></th><th><?php echo $lang["DESCRIPCIOESTIMUL"]?></th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
         for(var i=0;i<estimuls.length;i++){
-          html+="<tr><td>"+estimuls[i].id+"</td><td>"+estimuls[i].descripcio+"</td><td><div class='glyphicon glyphicon-ok-circle' style='cursor: pointer;' onClick='afegirEstimulBuscador("+idQuestionari+","+estimuls[i].id+",&apos;"+estimuls[i].descripcio+"&apos;)'></div></td></tr>";
+          html+="<tr><td>"+estimuls[i].id+"</td><td>"+estimuls[i].descripcio+"</td><td><div class='glyphicon glyphicon-ok-circle' style='cursor: pointer;' onClick='afegirEstimulBuscador("+idQuestionari+","+estimuls[i].id+",&apos;"+estimuls[i].descripcio+"&apos;)'></div>&nbsp; <div class='glyphicon glyphicon-eye-open'style='cursor: pointer;' onClick='veureEstimul("+estimuls[i].id+")' ></div></td></tr>";
         }
-        html += "<tr><td colspan=2></td><td><div class='input-group'> <input id='filtreEstimul' type='text' class='form-control'></input><span class='input-group-addon'><div class='glyphicon glyphicon glyphicon-search' onClick='buscaEstimul()' style='cursor: pointer;' ></div></div></td></tr>";
+        html += "<tr><td colspan=2></td><td><div class='input-group'> <input id='filtreEstimul' type='text' class='form-control'></input><span class='input-group-addon'><div class='glyphicon glyphicon glyphicon-search' onClick='buscaEstimul("+idQuestionari+")' style='cursor: pointer;' ></div></div></td></tr>";
         html +="</table>";
         return html;
       }
@@ -213,7 +237,7 @@
          var html =  "<table class='table table-hover table-condensed table-striped'><thead><tr><th>id</th><th><?php echo $lang["IDESTIMUL"]?></th><th><?php echo $lang["DESCRIPCIOESTIMUL"]?></th><th><?php echo $lang["ACCIONS"]?></th></tr></thead> ";
          for(var i=0;i<assignacioEstimuls.length;i++){
                 html +="<tr><td>"+assignacioEstimuls[i].id+"</td><td>"+assignacioEstimuls[i].idestimul+"</td><td>"+assignacioEstimuls[i].estimul_descripcio+"</td>";
-                html +="<td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarAssignacio("+idQuestionari+","+i+")'></div></td>";
+                html +="<td><div class='glyphicon glyphicon-minus' style='cursor: pointer;' onclick='esborrarAssignacio("+idQuestionari+","+i+")'></div> <div class='glyphicon glyphicon-eye-open'style='cursor: pointer;' onClick='veureEstimul("+assignacioEstimuls[i].idestimul+")' ></div> </td>";
                 html +="</tr>";
          }
          html += "<tr><td colspan=3></td><td><div class='glyphicon glyphicon-plus' style='cursor: pointer;' onClick='buscarEstimul("+idQuestionari+")'></div></td></tr>"
